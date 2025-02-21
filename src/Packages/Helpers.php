@@ -111,4 +111,15 @@ class Helpers
     {
         return $pair1[0] === $pair2[0] && $pair1[1] === $pair2[1];
     }
+
+    public static function convertLengthToDegrees(float $length, string $units): float
+    {
+        $conversionFactors = [
+            'kilometers' => 1 / 111.32,
+            'miles' => 1 / 69,
+            'degrees' => 1,
+        ];
+
+        return $length * ($conversionFactors[$units] ?? 1);
+    }
 }

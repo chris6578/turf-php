@@ -40,8 +40,10 @@ use willvincent\Turf\Packages\Circle;
 use willvincent\Turf\Packages\Destination;
 use willvincent\Turf\Packages\Distance;
 use willvincent\Turf\Packages\Kinks;
+use willvincent\Turf\Packages\RectangleGrid;
 use willvincent\Turf\Packages\Rewind;
 use willvincent\Turf\Packages\Simplify;
+use willvincent\Turf\Packages\SquareGrid;
 use willvincent\Turf\Packages\TurfClone;
 use willvincent\Turf\Packages\UnkinkPolygon;
 
@@ -264,6 +266,23 @@ class Turf
         ?bool $highQuality = false
     ): Feature|FeatureCollection|GeometryCollection|GeoJson {
         return (new Simplify)($geoJSON);
+    }
+
+    public static function rectangleGrid(
+        array $bbox,
+        float $cellWidth,
+        float $cellHeight,
+        string|Unit $units = Unit::KILOMETERS,
+        ?Polygon $mask = null,
+        array $properties = []
+    ): FeatureCollection {
+        return (new RectangleGrid)($bbox, $cellWidth, $cellHeight, $units, $mask, $properties);
+    }
+
+    /** Creates a grid of square polygons within a bounding box. */
+    public static function squareGrid(array $bbox, float $cellSize, string|Unit $units = Unit::KILOMETERS, ?Polygon $mask = null, array $properties = []): FeatureCollection
+    {
+        return (new SquareGrid)($bbox, $cellSize, $units, $mask, $properties);
     }
 
     /** Takes a kinked polygon and returns a feature collection of polygons that have no kinks. */
