@@ -14,7 +14,10 @@ use GeoJson\Geometry\MultiPolygon;
 use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 use willvincent\Turf\Enums\Unit;
+use willvincent\Turf\Packages\Along;
 use willvincent\Turf\Packages\Area;
+use willvincent\Turf\Packages\Bbox;
+use willvincent\Turf\Packages\BboxPolygon;
 use willvincent\Turf\Packages\Circle;
 use willvincent\Turf\Packages\Destination;
 use willvincent\Turf\Packages\Distance;
@@ -25,12 +28,30 @@ use willvincent\Turf\Packages\TurfClone;
 
 class Turf
 {
+    public static function along(GeoJson $geoJSON, float $distance, string|Unit $units = Unit::KILOMETERS): Feature
+    {
+        return (new Along)($geoJSON, $distance, $units);
+    }
+
     /**
      * Calculate the area of a GeoJSON Feature, FeatureCollection, Polygon or MultiPolygon.
      */
     public static function area(GeoJson $geoJSON, ?string $units = 'meters'): float
     {
         return (new Area)($geoJSON, $units);
+    }
+
+    /**
+     * Calculate the bounding box (BBox) of a given GeoJSON object.
+     */
+    public static function bbox(GeoJson $geoJSON, ?bool $recompute = false): array
+    {
+        return (new Bbox)($geoJSON, $recompute);
+    }
+
+    public static function bboxPolygon(array $bbox, array $properties = [], $id = null): Feature
+    {
+        return (new BboxPolygon)($bbox, $properties, $id);
     }
 
     /**
