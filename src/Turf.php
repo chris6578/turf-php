@@ -15,9 +15,12 @@ use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 use willvincent\Turf\Enums\Unit;
 use willvincent\Turf\Packages\Along;
+use willvincent\Turf\Packages\Angle;
 use willvincent\Turf\Packages\Area;
 use willvincent\Turf\Packages\Bbox;
+use willvincent\Turf\Packages\BboxClip;
 use willvincent\Turf\Packages\BboxPolygon;
+use willvincent\Turf\Packages\Bearing;
 use willvincent\Turf\Packages\Circle;
 use willvincent\Turf\Packages\Destination;
 use willvincent\Turf\Packages\Distance;
@@ -28,9 +31,21 @@ use willvincent\Turf\Packages\TurfClone;
 
 class Turf
 {
+    /**
+     * Takes a LineString and returns a Point at a specified distance along the line.
+     */
     public static function along(GeoJson $geoJSON, float $distance, string|Unit $units = Unit::KILOMETERS): Feature
     {
         return (new Along)($geoJSON, $distance, $units);
+    }
+
+    public static function angle(array $startPoint,
+        array $midPoint,
+        array $endPoint,
+        bool $explementary = false,
+        bool $mercator = false): float
+    {
+        return (new Angle)($startPoint, $midPoint, $endPoint, $explementary, $mercator);
     }
 
     /**
@@ -49,9 +64,26 @@ class Turf
         return (new Bbox)($geoJSON, $recompute);
     }
 
+    /**
+     * Clips a GeoJSON Feature to a given bounding box.
+     */
+    public static function bboxClip(GeoJson $geoJSON, array $bbox): Feature
+    {
+        return (new BboxClip)($geoJSON, $bbox);
+    }
+
+    /**
+     * Generates a Polygon feature from a bbox.
+     */
     public static function bboxPolygon(array $bbox, array $properties = [], $id = null): Feature
     {
         return (new BboxPolygon)($bbox, $properties, $id);
+    }
+
+    /** Calculates the geographic bearing between two points. */
+    public static function bearing(array $start, array $end, bool $final = false): float
+    {
+        return (new Bearing)($start, $end, $final);
     }
 
     /**
