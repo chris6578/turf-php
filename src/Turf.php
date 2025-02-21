@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace willvincent\Turf;
 
 use GeoJson\GeoJson;
-use GeoJson\Geometry\LineString;
+use GeoJson\Geometry\MultiPolygon;
 use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 use willvincent\Turf\Enums\Unit;
 use willvincent\Turf\Packages\TurfArea;
-use willvincent\Turf\Packages\TurfBooleanClockwise;
 use willvincent\Turf\Packages\TurfCircle;
+use willvincent\Turf\Packages\TurfClone;
 use willvincent\Turf\Packages\TurfDestination;
 use willvincent\Turf\Packages\TurfDistance;
+use willvincent\Turf\Packages\TurfRewind;
 
 class Turf
 {
@@ -27,15 +28,6 @@ class Turf
     public static function area(GeoJson $geoJSON, ?string $units = 'meters'): float
     {
         return (new TurfArea)($geoJSON, $units);
-    }
-
-    /**
-     * @param LineString|Polygon $line
-     * @return bool
-     */
-    public static function booleanClockwise(LineString | Polygon $line): bool
-    {
-        return (new TurfBooleanClockwise)($line);
     }
 
     /**
@@ -57,6 +49,18 @@ class Turf
     ): GeoJson
     {
         return (new TurfCircle)($center, $radius, $steps, $units, $properties);
+    }
+
+    /**
+     * Clone a GeoJson object.
+     * @param GeoJson $geoJSON
+     * @return GeoJson
+     */
+    public static function clone(
+        GeoJson $geoJSON,
+    ): GeoJson
+    {
+        return (new TurfClone)($geoJSON);
     }
 
     /**
@@ -95,5 +99,19 @@ class Turf
     ): float
     {
         return (new TurfDistance)($from, $to, $units);
+    }
+
+    /**
+     * Rewinds a polygon or multipolygon.
+     * @param Polygon|MultiPolygon $polygon
+     * @param bool $reverse
+     * @return Polygon|MultiPolygon
+     */
+    public static function rewind(
+        Polygon | Multipolygon $polygon,
+        bool $reverse = false,
+    ): Polygon | Multipolygon
+    {
+        return (new TurfRewind)($polygon, $reverse);
     }
 }
