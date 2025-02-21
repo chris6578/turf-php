@@ -28,6 +28,7 @@ use willvincent\Turf\Packages\Kinks;
 use willvincent\Turf\Packages\Rewind;
 use willvincent\Turf\Packages\Simplify;
 use willvincent\Turf\Packages\TurfClone;
+use willvincent\Turf\Packages\UnkinkPolygon;
 
 class Turf
 {
@@ -166,5 +167,12 @@ class Turf
         ?bool $highQuality = false
     ): Feature|FeatureCollection|GeometryCollection|GeoJson {
         return (new Simplify)($geoJSON);
+    }
+
+    /** Takes a kinked polygon and returns a feature collection of polygons that have no kinks. */
+    public static function unkink(
+        GeoJson $geoJSON,
+    ): FeatureCollection {
+        return (new UnkinkPolygon)($geoJSON);
     }
 }
