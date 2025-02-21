@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace willvincent\Turf\Packages;
 
-use GeoJson\Geometry\Point;
 use GeoJson\Feature\Feature;
+use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 use willvincent\Turf\Enums\Unit;
 
@@ -18,14 +18,14 @@ class TurfCircle
         string|Unit $units = Unit::KILOMETERS,
         array $properties = []
     ): Feature {
-        if (!$units instanceof Unit) {
+        if (! $units instanceof Unit) {
             $units = Unit::from($units);
         }
 
         $coordinates = [];
 
         for ($i = 0; $i < $steps; $i++) {
-            $destination = (new TurfDestination())(
+            $destination = (new TurfDestination)(
                 origin: $center,
                 distance: $radius,
                 bearing: ($i * -360) / $steps,

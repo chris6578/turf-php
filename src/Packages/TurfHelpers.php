@@ -12,7 +12,7 @@ class TurfHelpers
 
     public const PI = 3.1415926;
 
-    public static function factors(?string $factor = null): int | float | array
+    public static function factors(?string $factor = null): int|float|array
     {
         $factors = [
             'centimeters' => self::EARTH_RADIUS * 100,
@@ -39,7 +39,7 @@ class TurfHelpers
         return $factors;
     }
 
-    public static function areaFactors(?string $factor = null): int | float | array
+    public static function areaFactors(?string $factor = null): int|float|array
     {
         $factors = [
             'acres' => 0.000247105,

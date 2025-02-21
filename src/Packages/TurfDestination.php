@@ -14,9 +14,8 @@ class TurfDestination
         float $distance,
         float $bearing,
         string|Unit $units = 'kilometers'
-    ): Point
-    {
-        if (!$origin instanceof Point) {
+    ): Point {
+        if (! $origin instanceof Point) {
             $origin = new Point($origin);
         }
 

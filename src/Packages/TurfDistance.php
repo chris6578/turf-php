@@ -14,15 +14,14 @@ class TurfDistance
         array|Point $from,
         array|Point $to,
         string|Unit $units = Unit::KILOMETERS,
-    ): float
-    {
-        if (!$from instanceof Geometry) {
+    ): float {
+        if (! $from instanceof Geometry) {
             $from = new Point($from);
         }
-        if (!$to instanceof Geometry) {
+        if (! $to instanceof Geometry) {
             $to = new Point($to);
         }
-        if (!$units instanceof Unit) {
+        if (! $units instanceof Unit) {
             $units = Unit::from($units);
         }
 

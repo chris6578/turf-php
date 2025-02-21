@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace willvincent\Turf\Packages;
 
-use GeoJson\GeoJson;
-use GeoJson\Feature\FeatureCollection;
 use GeoJson\Feature\Feature;
+use GeoJson\Feature\FeatureCollection;
+use GeoJson\GeoJson;
 use GeoJson\Geometry\GeometryCollection;
 use GeoJson\Geometry\MultiLineString;
 use GeoJson\Geometry\MultiPoint;
