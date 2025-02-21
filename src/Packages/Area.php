@@ -8,9 +8,9 @@ use GeoJson\GeoJson;
 use InvalidArgumentException;
 use willvincent\Turf\Enums\Unit;
 
-class TurfArea
+class Area
 {
-    const AREA_FACTOR = (TurfHelpers::EARTH_RADIUS * TurfHelpers::EARTH_RADIUS / 2);
+    const AREA_FACTOR = (Helpers::EARTH_RADIUS * Helpers::EARTH_RADIUS / 2);
 
     /**
      * Calculates the approximate area of a GeoJSON geometry (Polygon or MultiPolygon) in square meters.
@@ -47,7 +47,7 @@ class TurfArea
                 throw new InvalidArgumentException('Only Feature, FeatureCollection, Polygon and MultiPolygon types are supported');
         }
 
-        return $totalArea * TurfHelpers::areaFactors($units->value);
+        return $totalArea * Helpers::areaFactors($units->value);
     }
 
     /**

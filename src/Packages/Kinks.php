@@ -12,7 +12,7 @@ use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 use InvalidArgumentException;
 
-class TurfKinks
+class Kinks
 {
     public function __invoke(
         GeoJson $featureIn

@@ -13,7 +13,7 @@ use GeoJson\Geometry\MultiPolygon;
 use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 
-class TurfRewind
+class Rewind
 {
     public function __invoke(
         GeoJson $geoJSON,

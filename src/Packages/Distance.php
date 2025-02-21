@@ -8,7 +8,7 @@ use GeoJson\Geometry\Geometry;
 use GeoJson\Geometry\Point;
 use willvincent\Turf\Enums\Unit;
 
-class TurfDistance
+class Distance
 {
     public function __invoke(
         array|Point $from,
@@ -37,7 +37,7 @@ class TurfDistance
             pow(sin($dLon / 2), 2) *
             cos($lat1) * cos($lat2);
 
-        return TurfHelpers::radiansToLength(
+        return Helpers::radiansToLength(
             radians: 2 * atan2(sqrt($a), sqrt(1 - $a)),
             units: $units,
         );

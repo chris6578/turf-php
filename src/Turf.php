@@ -14,14 +14,14 @@ use GeoJson\Geometry\MultiPolygon;
 use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 use willvincent\Turf\Enums\Unit;
-use willvincent\Turf\Packages\TurfArea;
-use willvincent\Turf\Packages\TurfCircle;
+use willvincent\Turf\Packages\Area;
+use willvincent\Turf\Packages\Circle;
+use willvincent\Turf\Packages\Destination;
+use willvincent\Turf\Packages\Distance;
+use willvincent\Turf\Packages\Kinks;
+use willvincent\Turf\Packages\Rewind;
+use willvincent\Turf\Packages\Simplify;
 use willvincent\Turf\Packages\TurfClone;
-use willvincent\Turf\Packages\TurfDestination;
-use willvincent\Turf\Packages\TurfDistance;
-use willvincent\Turf\Packages\TurfKinks;
-use willvincent\Turf\Packages\TurfRewind;
-use willvincent\Turf\Packages\TurfSimplify;
 
 class Turf
 {
@@ -30,7 +30,7 @@ class Turf
      */
     public static function area(GeoJson $geoJSON, ?string $units = 'meters'): float
     {
-        return (new TurfArea)($geoJSON, $units);
+        return (new Area)($geoJSON, $units);
     }
 
     /**
@@ -43,7 +43,7 @@ class Turf
         string|Unit $units = Unit::KILOMETERS,
         array $properties = [],
     ): GeoJson {
-        return (new TurfCircle)($center, $radius, $steps, $units, $properties);
+        return (new Circle)($center, $radius, $steps, $units, $properties);
     }
 
     /**
@@ -66,7 +66,7 @@ class Turf
         float $bearing,
         string|Unit $units = Unit::KILOMETERS,
     ): Point {
-        return (new TurfDestination)($origin, $distance, $bearing, $units);
+        return (new Destination)($origin, $distance, $bearing, $units);
     }
 
     /**
@@ -77,7 +77,7 @@ class Turf
         array|Point $to,
         string|Unit $units = Unit::KILOMETERS,
     ): float {
-        return (new TurfDistance)($from, $to, $units);
+        return (new Distance)($from, $to, $units);
     }
 
     /**
@@ -89,7 +89,7 @@ class Turf
     public static function kinks(
         GeoJson $geoJSON
     ): FeatureCollection {
-        return (new TurfKinks)($geoJSON);
+        return (new Kinks)($geoJSON);
     }
 
     /**
@@ -101,7 +101,7 @@ class Turf
         GeoJson $geoJSON,
         bool $reverse = false,
     ): GeometryCollection|FeatureCollection|LineString|MultiLineString|Polygon|MultiPolygon {
-        return (new TurfRewind)($geoJSON, $reverse);
+        return (new Rewind)($geoJSON, $reverse);
     }
 
     /**
@@ -112,6 +112,6 @@ class Turf
         ?float $tolerance = 1.0,
         ?bool $highQuality = false
     ): Feature|FeatureCollection|GeometryCollection|GeoJson {
-        return (new TurfSimplify)($geoJSON);
+        return (new Simplify)($geoJSON);
     }
 }

@@ -7,7 +7,7 @@ namespace willvincent\Turf\Packages;
 use GeoJson\Geometry\Point;
 use willvincent\Turf\Enums\Unit;
 
-class TurfDestination
+class Destination
 {
     public function __invoke(
         array|Point $origin,
@@ -24,7 +24,7 @@ class TurfDestination
         $latitude1 = deg2rad($coordinates1[1]);
         $bearingRad = deg2rad($bearing);
 
-        $radians = TurfHelpers::lengthToRadians(
+        $radians = Helpers::lengthToRadians(
             distance: $distance,
             units: $units
         );

@@ -6,7 +6,7 @@ namespace willvincent\Turf\Packages;
 
 use willvincent\Turf\Enums\Unit;
 
-class TurfHelpers
+class Helpers
 {
     public const EARTH_RADIUS = 6371008.8;
 

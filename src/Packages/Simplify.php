@@ -13,7 +13,7 @@ use GeoJson\Geometry\MultiPolygon;
 use GeoJson\Geometry\Polygon;
 use InvalidArgumentException;
 
-class TurfSimplify
+class Simplify
 {
     public function __invoke(
         GeoJson $geojson,

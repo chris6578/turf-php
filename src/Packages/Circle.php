@@ -9,7 +9,7 @@ use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 use willvincent\Turf\Enums\Unit;
 
-class TurfCircle
+class Circle
 {
     public function __invoke(
         array|Point $center,
@@ -25,7 +25,7 @@ class TurfCircle
         $coordinates = [];
 
         for ($i = 0; $i < $steps; $i++) {
-            $destination = (new TurfDestination)(
+            $destination = (new Destination)(
                 origin: $center,
                 distance: $radius,
                 bearing: ($i * -360) / $steps,
