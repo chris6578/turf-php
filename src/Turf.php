@@ -7,6 +7,7 @@ namespace willvincent\Turf;
 use GeoJson\Feature\Feature;
 use GeoJson\Feature\FeatureCollection;
 use GeoJson\GeoJson;
+use GeoJson\Geometry\Geometry;
 use GeoJson\Geometry\GeometryCollection;
 use GeoJson\Geometry\LineString;
 use GeoJson\Geometry\MultiLineString;
@@ -21,6 +22,20 @@ use willvincent\Turf\Packages\Bbox;
 use willvincent\Turf\Packages\BboxClip;
 use willvincent\Turf\Packages\BboxPolygon;
 use willvincent\Turf\Packages\Bearing;
+use willvincent\Turf\Packages\BooleanClockwise;
+use willvincent\Turf\Packages\BooleanConcave;
+use willvincent\Turf\Packages\BooleanContains;
+use willvincent\Turf\Packages\BooleanCrosses;
+use willvincent\Turf\Packages\BooleanDisjoint;
+use willvincent\Turf\Packages\BooleanEqual;
+use willvincent\Turf\Packages\BooleanIntersect;
+use willvincent\Turf\Packages\BooleanOverlap;
+use willvincent\Turf\Packages\BooleanParallel;
+use willvincent\Turf\Packages\BooleanPointInPolygon;
+use willvincent\Turf\Packages\BooleanPointOnLine;
+use willvincent\Turf\Packages\BooleanTouches;
+use willvincent\Turf\Packages\booleanValid;
+use willvincent\Turf\Packages\BooleanWithin;
 use willvincent\Turf\Packages\Circle;
 use willvincent\Turf\Packages\Destination;
 use willvincent\Turf\Packages\Distance;
@@ -87,9 +102,91 @@ class Turf
         return (new Bearing)($start, $end, $final);
     }
 
-    /**
-     * Generate a circular polygon around the specified center point.
-     */
+    /** Determines if a ring (LineString or Polygon) is clockwise. */
+    public static function booleanClockwise(LineString|Polygon|array $geometry): bool
+    {
+        return (new BooleanClockwise)($geometry);
+    }
+
+    /** Determines if a polygon is concave. */
+    public static function booleanConcave(Polygon $polygon): bool
+    {
+        return (new BooleanConcave)($polygon);
+    }
+
+    /** Determines if one geometry completely contains another. */
+    public static function booleanContains(Geometry $geometry1, Geometry $geometry2): bool
+    {
+        return (new BooleanContains)($geometry1, $geometry2);
+    }
+
+    /** Determines if two geometries cross each other. */
+    public static function booleanCrosses(Geometry $geometry1, Geometry $geometry2): bool
+    {
+        return (new BooleanCrosses)($geometry1, $geometry2);
+    }
+
+    /** Determines if two geometries are disjoint (i.e., they do not intersect). */
+    public static function booleanDisjoint(Geometry $geometry1, Geometry $geometry2): bool
+    {
+        return (new BooleanDisjoint)($geometry1, $geometry2);
+    }
+
+    /** Determines if two geometries are equal by comparing their coordinate values. */
+    public static function booleanEqual(Geometry $geometry1, Geometry $geometry2, int $precision = 6): bool
+    {
+        return (new BooleanEqual)($geometry1, $geometry2, $precision);
+    }
+
+    /** Determines if two geometries intersect. */
+    public static function booleanIntersect(Geometry $geometry1, Geometry $geometry2): bool
+    {
+        return (new BooleanIntersect)($geometry1, $geometry2);
+    }
+
+    /** Determines if two geometries overlap. */
+    public static function booleanOverlap(Geometry $geometry1, Geometry $geometry2): bool
+    {
+        return (new BooleanOverlap)($geometry1, $geometry2);
+    }
+
+    /** Determines if two LineStrings are parallel. */
+    public static function booleanParallel(LineString $line1, LineString $line2): bool
+    {
+        return (new BooleanParallel)($line1, $line2);
+    }
+
+    /** Determines if a point is within a polygon. */
+    public static function booleanPointInPolygon(Point $point, Polygon|MultiPolygon $polygon, bool $ignoreBoundary = false): bool
+    {
+        return (new BooleanPointInPolygon)($point, $polygon, $ignoreBoundary);
+    }
+
+    /** Determines if a point is on a line segment. */
+    public static function booleanPointOnLine(Point $point, LineString $line, bool $ignoreEndVertices = false, ?float $epsilon = null): bool
+    {
+        return (new BooleanPointOnLine)($point, $line, $ignoreEndVertices, $epsilon);
+    }
+
+    /** Determines if geometries touch each other. */
+    public static function booleanTouches(Geometry $geometry1, Geometry $geometry2): bool
+    {
+        return (new BooleanTouches)($geometry1, $geometry2);
+    }
+
+    /** Determines if a geometry is valid according to the OGC Simple Feature Specification. */
+    public static function booleanValid(Geometry $geometry): bool
+    {
+        return (new BooleanValid)($geometry);
+    }
+
+    /** Determines if the first geometry is completely within the second geometry. */
+    public static function booleanWithin(Geometry $geometry1, Geometry $geometry2): bool
+    {
+        return (new BooleanWithin)($geometry1, $geometry2);
+    }
+
+    /** Generate a circular polygon around the specified center point. */
     public static function circle(
         array|Point $center,
         float $radius,

@@ -89,4 +89,26 @@ class Helpers
 
         return $distance / $factor;
     }
+
+    public static function isPointOnLineSegment(array $start, array $end, array $point): bool
+    {
+        $crossProduct = ($point[1] - $start[1]) * ($end[0] - $start[0]) - ($point[0] - $start[0]) * ($end[1] - $start[1]);
+        if (abs($crossProduct) > 1e-10) {
+            return false;
+        }
+
+        $dotProduct = ($point[0] - $start[0]) * ($end[0] - $start[0]) + ($point[1] - $start[1]) * ($end[1] - $start[1]);
+        if ($dotProduct < 0) {
+            return false;
+        }
+
+        $squaredLength = ($end[0] - $start[0]) ** 2 + ($end[1] - $start[1]) ** 2;
+
+        return $dotProduct <= $squaredLength;
+    }
+
+    public static function compareCoords(array $pair1, array $pair2): bool
+    {
+        return $pair1[0] === $pair2[0] && $pair1[1] === $pair2[1];
+    }
 }
