@@ -1,0 +1,24 @@
+{
+    "name": "willvincent/turf-php",
+    "description": "TurfJS-like GeoJSON manipulation in PHP.",
+    "type": "library",
+    "require": {
+        "jmikola/geojson": "^1.0",
+        "php": ">=8.2"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "willvincent\\Turf\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Will Vincent",
+            "email": "will@willvincent.com"
+        }
+    ],
+    "require-dev": {
+        "laravel/pint": "^1.21"
+    }
+}
