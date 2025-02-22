@@ -34,7 +34,7 @@ class Along
         for ($i = 0; $i < count($coords) - 1; $i++) {
             $segmentStart = $coords[$i];
             $segmentEnd = $coords[$i + 1];
-            $segmentDistance = self::haversineDistance($segmentStart, $segmentEnd, $units);
+            $segmentDistance = Helpers::haversineDistance($segmentStart, $segmentEnd, $units);
 
             if ($traveled + $segmentDistance >= $distance) {
                 $remaining = $distance - $traveled;
@@ -52,37 +52,6 @@ class Along
     }
 
     /**
-     * Computes the Haversine distance between two points.
-     *
-     * @param  array  $point1  The first point [lon, lat].
-     * @param  array  $point2  The second point [lon, lat].
-     * @param  string  $units  Distance units ('kilometers', 'miles', 'degrees', 'radians').
-     * @return float Distance between the points.
-     */
-    public function haversineDistance(
-        array $point1,
-        array $point2,
-        Unit $units = Unit::KILOMETERS): float
-    {
-        if (in_array($units, [Unit::MILES, Unit::KILOMETERS, Unit::RADIANS, Unit::DEGREES])) {
-            $earthRadius = Helpers::factors($units->value);
-        } else {
-            throw new InvalidArgumentException("Invalid units. Use 'kilometers', 'miles', 'degrees', or 'radians'.");
-        }
-
-        [$lon1, $lat1] = array_map('deg2rad', $point1);
-        [$lon2, $lat2] = array_map('deg2rad', $point2);
-
-        $dLat = $lat2 - $lat1;
-        $dLon = $lon2 - $lon1;
-
-        $a = sin($dLat / 2) ** 2 + cos($lat1) * cos($lat2) * sin($dLon / 2) ** 2;
-        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-
-        return $earthRadius * $c;
-    }
-
-    /**
      * Interpolates a point between two points based on a fraction.
      *
      * @param  array  $start  The start point [lon, lat].
@@ -90,7 +59,7 @@ class Along
      * @param  float  $fraction  The fraction along the segment (0 to 1).
      * @return array Interpolated point [lon, lat].
      */
-    public function interpolatePoint(array $start, array $end, float $fraction): array
+    private static function interpolatePoint(array $start, array $end, float $fraction): array
     {
         return [
             $start[0] + $fraction * ($end[0] - $start[0]),

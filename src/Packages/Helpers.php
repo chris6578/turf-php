@@ -8,6 +8,7 @@ use GeoJson\Feature\Feature;
 use GeoJson\Feature\FeatureCollection;
 use GeoJson\Geometry\MultiPolygon;
 use GeoJson\Geometry\Polygon;
+use InvalidArgumentException;
 use willvincent\Turf\Enums\Unit;
 use willvincent\Turf\Turf;
 
@@ -151,5 +152,28 @@ class Helpers
             }
         }
         return $filteredFeatures;
+    }
+
+    public static function haversineDistance(
+        array $point1,
+        array $point2,
+        Unit $units = Unit::KILOMETERS): float
+    {
+        if (in_array($units, [Unit::MILES, Unit::KILOMETERS, Unit::RADIANS, Unit::DEGREES])) {
+            $earthRadius = Helpers::factors($units->value);
+        } else {
+            throw new InvalidArgumentException("Invalid units. Use 'kilometers', 'miles', 'degrees', or 'radians'.");
+        }
+
+        [$lon1, $lat1] = array_map('deg2rad', $point1);
+        [$lon2, $lat2] = array_map('deg2rad', $point2);
+
+        $dLat = $lat2 - $lat1;
+        $dLon = $lon2 - $lon1;
+
+        $a = sin($dLat / 2) ** 2 + cos($lat1) * cos($lat2) * sin($dLon / 2) ** 2;
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        return $earthRadius * $c;
     }
 }
