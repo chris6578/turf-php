@@ -131,7 +131,7 @@ The following spatial analysis functions are currently implemented:
 - ✅ `angle` - Finds the angle formed by two adjacent segments defined by 3 points.
 - ✅ `area` - Calculates the geodesic area in square meters (or other units) of one or more polygons.
 - ✅ `bbox` - Calculates the bounding box for any GeoJSON object, including FeatureCollection
-- ✅ `bearing` - Takes two points and finds the geographic bearing between them (NOTE: Output varies slightly from TurfJS calculations, presumably precision differences)
+- ✅ `bearing` - Takes two points and finds the geographic bearing between them.
 - ✅ `distance` - Calculate the distance between two points
 
 The following generative and manipulation functions are currently implemented:

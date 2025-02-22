@@ -273,14 +273,20 @@ class Turf
         float $cellWidth,
         float $cellHeight,
         string|Unit $units = Unit::KILOMETERS,
-        ?Polygon $mask = null,
+        Feature|FeatureCollection|Polygon|MultiPolygon|null $mask = null,
         array $properties = []
     ): FeatureCollection {
         return (new RectangleGrid)($bbox, $cellWidth, $cellHeight, $units, $mask, $properties);
     }
 
     /** Creates a grid of square polygons within a bounding box. */
-    public static function squareGrid(array $bbox, float $cellSize, string|Unit $units = Unit::KILOMETERS, ?Polygon $mask = null, array $properties = []): FeatureCollection
+    public static function squareGrid(
+        array $bbox,
+        float $cellSize,
+        string|Unit $units = Unit::KILOMETERS,
+        Feature|FeatureCollection|Polygon|MultiPolygon|null $mask = null,
+        array $properties = []
+    ): FeatureCollection
     {
         return (new SquareGrid)($bbox, $cellSize, $units, $mask, $properties);
     }

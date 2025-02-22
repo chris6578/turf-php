@@ -4,20 +4,23 @@ declare(strict_types=1);
 
 namespace willvincent\Turf\Packages;
 
+use GeoJson\Feature\Feature;
+use GeoJson\Feature\FeatureCollection;
+use GeoJson\Geometry\MultiPolygon;
+use GeoJson\Geometry\Polygon;
 use willvincent\Turf\Enums\Unit;
+use willvincent\Turf\Turf;
 
 class Helpers
 {
     public const EARTH_RADIUS = 6371008.8;
-
-    public const PI = 3.1415926;
 
     public static function factors(?string $factor = null): int|float|array
     {
         $factors = [
             'centimeters' => self::EARTH_RADIUS * 100,
             'centimetres' => self::EARTH_RADIUS * 100,
-            'degrees' => 360 / (2 * self::PI),
+            'degrees' => 360 / (2 * M_PI),
             'feet' => self::EARTH_RADIUS * 3.28084,
             'inches' => self::EARTH_RADIUS * 39.37,
             'kilometers' => self::EARTH_RADIUS / 1000,
@@ -85,9 +88,13 @@ class Helpers
         if (! $units instanceof Unit) {
             $units = Unit::from($units);
         }
-        $factor = self::factors()[$units->value];
 
-        return $distance / $factor;
+        // Special case for degrees
+        if ($units == Unit::DEGREES) {
+            return $distance * (M_PI / 180);
+        }
+
+        return $distance / self::factors()[$units->value];
     }
 
     public static function isPointOnLineSegment(array $start, array $end, array $point): bool
@@ -112,14 +119,37 @@ class Helpers
         return $pair1[0] === $pair2[0] && $pair1[1] === $pair2[1];
     }
 
-    public static function convertLengthToDegrees(float $length, string $units): float
-    {
-        $conversionFactors = [
-            'kilometers' => 1 / 111.32,
-            'miles' => 1 / 69,
-            'degrees' => 1,
-        ];
+    public static function filterGridByMask(
+        array $gridFeatures,
+        Feature|FeatureCollection|Polygon|MultiPolygon $mask
+    ): array {
+        switch ($mask->getType()) {
+            case 'FeatureCollection':
+                $maskGeometry = array_map(fn ($feature) => $feature->getGeometry(), $mask->getFeatures());
+                break;
+            case 'Feature':
+                $maskGeometry = $mask->getGeometry();
+                break;
+            default:
+                $maskGeometry = $mask;
+                break;
+        }
 
-        return $length * ($conversionFactors[$units] ?? 1);
+        $filteredFeatures = [];
+        foreach ($gridFeatures as $feature) {
+            $cellGeometry = $feature->getGeometry();
+            if (is_array($maskGeometry)) {
+                foreach ($maskGeometry as $geometry) {
+                    if (Turf::booleanIntersect($cellGeometry, $geometry)) {
+                        $filteredFeatures[] = $feature;
+                    }
+                }
+            } else {
+                if (Turf::booleanIntersect($cellGeometry, $maskGeometry)) {
+                    $filteredFeatures[] = $feature;
+                }
+            }
+        }
+        return $filteredFeatures;
     }
 }
