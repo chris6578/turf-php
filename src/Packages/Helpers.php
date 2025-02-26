@@ -16,6 +16,22 @@ class Helpers
 {
     public const EARTH_RADIUS = 6371008.8;
 
+    public static $metersUnitConversion = [
+        'meters' => 1,
+        'metres' => 1,
+        'kilometers' => 1000,
+        'kilometres' => 1000,
+        'miles' => 1609.34,
+        'nauticalmiles' => 1852,
+        'feet' => 0.3048,
+        'yards' => 0.9144,
+        'inches' => 0.0254,
+        'centimeters' => 0.01,
+        'centimetres' => 0.01,
+        'millimeters' => 0.001,
+        'millimetres' => 0.001,
+    ];
+
     public static function factors(?string $factor = null): int|float|array
     {
         $factors = [
@@ -70,11 +86,33 @@ class Helpers
         return $factors;
     }
 
+    public static function convertToMeters(float $distance, string|Unit $unit): float
+    {
+        if (!$unit instanceof Unit) {
+            $unit = Unit::from($unit);
+        }
+        $unit = $unit->value;
+
+        return $distance * self::$metersUnitConversion[$unit];
+    }
+
+    public static function metersToDegreesLatitude(float $meters): float
+    {
+        return ($meters / (M_PI * self::EARTH_RADIUS)) * 180;
+    }
+
+    public static function metersToDegreesLongitude(float $meters, float $latitude): float
+    {
+        $cosLat = cos(deg2rad($latitude));
+        return ($meters / (M_PI * self::EARTH_RADIUS * $cosLat)) * 180;
+    }
+
     public static function radiansToLength(
-        float $radians,
+        float       $radians,
         string|Unit $units = Unit::KILOMETERS,
-    ): float|int {
-        if (! $units instanceof Unit) {
+    ): float|int
+    {
+        if (!$units instanceof Unit) {
             $units = Unit::from($units);
         }
         $factor = self::factors()[$units->value];
@@ -83,10 +121,11 @@ class Helpers
     }
 
     public static function lengthToRadians(
-        float $distance,
+        float       $distance,
         string|Unit $units = Unit::KILOMETERS,
-    ): float|int {
-        if (! $units instanceof Unit) {
+    ): float|int
+    {
+        if (!$units instanceof Unit) {
             $units = Unit::from($units);
         }
 
@@ -121,12 +160,13 @@ class Helpers
     }
 
     public static function filterGridByMask(
-        array $gridFeatures,
+        array                                          $gridFeatures,
         Feature|FeatureCollection|Polygon|MultiPolygon $mask
-    ): array {
+    ): array
+    {
         switch ($mask->getType()) {
             case 'FeatureCollection':
-                $maskGeometry = array_map(fn ($feature) => $feature->getGeometry(), $mask->getFeatures());
+                $maskGeometry = array_map(fn($feature) => $feature->getGeometry(), $mask->getFeatures());
                 break;
             case 'Feature':
                 $maskGeometry = $mask->getGeometry();
@@ -157,7 +197,7 @@ class Helpers
     public static function haversineDistance(
         array $point1,
         array $point2,
-        Unit $units = Unit::KILOMETERS): float
+        Unit  $units = Unit::KILOMETERS): float
     {
         if (in_array($units, [Unit::MILES, Unit::KILOMETERS, Unit::RADIANS, Unit::DEGREES])) {
             $earthRadius = Helpers::factors($units->value);
@@ -175,5 +215,39 @@ class Helpers
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
 
         return $earthRadius * $c;
+    }
+
+    private static function convexHull(array $points): array
+    {
+        $n = count($points);
+        if ($n < 3) return $points;
+
+        // Sort by x-coordinate (then y)
+        usort($points, fn($a, $b) => $a[0] === $b[0] ? $a[1] - $b[1] : $a[0] - $b[0]);
+
+        $hull = [];
+        // Lower hull
+        foreach ($points as $point) {
+            while (count($hull) >= 2 && self::cross($hull[count($hull)-2], $hull[count($hull)-1], $point) <= 0) {
+                array_pop($hull);
+            }
+            $hull[] = $point;
+        }
+        // Upper hull
+        $t = count($hull) + 1;
+        for ($i = $n - 2; $i >= 0; $i--) {
+            while (count($hull) >= $t && self::cross($hull[count($hull)-2], $hull[count($hull)-1], $points[$i]) <= 0) {
+                array_pop($hull);
+            }
+            $hull[] = $points[$i];
+        }
+        array_pop($hull); // Remove duplicate last point
+        $hull[] = $hull[0]; // Close the ring
+        return $hull;
+    }
+
+    private static function cross(array $o, array $a, array $b): float
+    {
+        return ($a[0] - $o[0]) * ($b[1] - $o[1]) - ($a[1] - $o[1]) * ($b[0] - $o[0]);
     }
 }
