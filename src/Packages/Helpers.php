@@ -7,6 +7,7 @@ namespace willvincent\Turf\Packages;
 use GeoJson\Feature\Feature;
 use GeoJson\Feature\FeatureCollection;
 use GeoJson\Geometry\MultiPolygon;
+use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 use InvalidArgumentException;
 use willvincent\Turf\Enums\Unit;
@@ -88,7 +89,7 @@ class Helpers
 
     public static function convertToMeters(float $distance, string|Unit $unit): float
     {
-        if (!$unit instanceof Unit) {
+        if (! $unit instanceof Unit) {
             $unit = Unit::from($unit);
         }
         $unit = $unit->value;
@@ -104,15 +105,15 @@ class Helpers
     public static function metersToDegreesLongitude(float $meters, float $latitude): float
     {
         $cosLat = cos(deg2rad($latitude));
+
         return ($meters / (M_PI * self::EARTH_RADIUS * $cosLat)) * 180;
     }
 
     public static function radiansToLength(
-        float       $radians,
+        float $radians,
         string|Unit $units = Unit::KILOMETERS,
-    ): float|int
-    {
-        if (!$units instanceof Unit) {
+    ): float|int {
+        if (! $units instanceof Unit) {
             $units = Unit::from($units);
         }
         $factor = self::factors()[$units->value];
@@ -121,11 +122,10 @@ class Helpers
     }
 
     public static function lengthToRadians(
-        float       $distance,
+        float $distance,
         string|Unit $units = Unit::KILOMETERS,
-    ): float|int
-    {
-        if (!$units instanceof Unit) {
+    ): float|int {
+        if (! $units instanceof Unit) {
             $units = Unit::from($units);
         }
 
@@ -137,21 +137,37 @@ class Helpers
         return $distance / self::factors()[$units->value];
     }
 
-    public static function isPointOnLineSegment(array $start, array $end, array $point): bool
+    public static function isPointOnLineSegment(array $start, array $end, array $point, $epsilon = 1e-10, $ignoreEndVertices = false): bool
     {
-        $crossProduct = ($point[1] - $start[1]) * ($end[0] - $start[0]) - ($point[0] - $start[0]) * ($end[1] - $start[1]);
-        if (abs($crossProduct) > 1e-10) {
+        if ($ignoreEndVertices && ($start === $point || $end === $point)) {
             return false;
         }
 
-        $dotProduct = ($point[0] - $start[0]) * ($end[0] - $start[0]) + ($point[1] - $start[1]) * ($end[1] - $start[1]);
-        if ($dotProduct < 0) {
+        $x = $point[0];
+        $y = $point[1];
+        $x1 = $start[0];
+        $y1 = $start[1];
+        $x2 = $end[0];
+        $y2 = $end[1];
+
+        // Calculate cross product for collinearity
+        $crossProduct = ($y - $y1) * ($x2 - $x1) - ($x - $x1) * ($y2 - $y1);
+        if (abs($crossProduct) > $epsilon) {
             return false;
         }
 
-        $squaredLength = ($end[0] - $start[0]) ** 2 + ($end[1] - $start[1]) ** 2;
+        // Check if point is within segment bounds using dot product
+        $dotProduct = ($x - $x1) * ($x2 - $x1) + ($y - $y1) * ($y2 - $y1);
+        if ($dotProduct < -$epsilon) { // Slightly negative allowed within epsilon
+            return false;
+        }
 
-        return $dotProduct <= $squaredLength;
+        $squaredLength = ($x2 - $x1) ** 2 + ($y2 - $y1) ** 2;
+        if ($dotProduct > $squaredLength + $epsilon) { // Slightly beyond allowed within epsilon
+            return false;
+        }
+
+        return true;
     }
 
     public static function compareCoords(array $pair1, array $pair2): bool
@@ -160,44 +176,48 @@ class Helpers
     }
 
     public static function filterGridByMask(
-        array                                          $gridFeatures,
+        array $gridFeatures,
         Feature|FeatureCollection|Polygon|MultiPolygon $mask
-    ): array
-    {
-        switch ($mask->getType()) {
-            case 'FeatureCollection':
-                $maskGeometry = array_map(fn($feature) => $feature->getGeometry(), $mask->getFeatures());
-                break;
-            case 'Feature':
-                $maskGeometry = $mask->getGeometry();
-                break;
-            default:
-                $maskGeometry = $mask;
-                break;
-        }
+    ): array {
+        $maskGeometry = $mask instanceof FeatureCollection
+            ? array_map(fn ($feature) => $feature->getGeometry(), $mask->getFeatures())
+            : ($mask instanceof Feature ? $mask->getGeometry() : $mask);
 
         $filteredFeatures = [];
         foreach ($gridFeatures as $feature) {
             $cellGeometry = $feature->getGeometry();
             if (is_array($maskGeometry)) {
                 foreach ($maskGeometry as $geometry) {
-                    if (Turf::booleanIntersect($cellGeometry, $geometry)) {
+                    if (self::anyPointInPolygon($cellGeometry->getCoordinates()[0], $geometry)) {
                         $filteredFeatures[] = $feature;
+                        break;
                     }
                 }
             } else {
-                if (Turf::booleanIntersect($cellGeometry, $maskGeometry)) {
+                if (self::anyPointInPolygon($cellGeometry->getCoordinates()[0], $maskGeometry)) {
                     $filteredFeatures[] = $feature;
                 }
             }
         }
+
         return $filteredFeatures;
+    }
+
+    private static function anyPointInPolygon(array $points, Polygon|MultiPolygon $polygon): bool
+    {
+        foreach ($points as $point) {
+            if (Turf::booleanPointInPolygon(new Point($point), $polygon)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static function haversineDistance(
         array $point1,
         array $point2,
-        Unit  $units = Unit::KILOMETERS): float
+        Unit $units = Unit::KILOMETERS): float
     {
         if (in_array($units, [Unit::MILES, Unit::KILOMETERS, Unit::RADIANS, Unit::DEGREES])) {
             $earthRadius = Helpers::factors($units->value);
@@ -220,15 +240,17 @@ class Helpers
     private static function convexHull(array $points): array
     {
         $n = count($points);
-        if ($n < 3) return $points;
+        if ($n < 3) {
+            return $points;
+        }
 
         // Sort by x-coordinate (then y)
-        usort($points, fn($a, $b) => $a[0] === $b[0] ? $a[1] - $b[1] : $a[0] - $b[0]);
+        usort($points, fn ($a, $b) => $a[0] === $b[0] ? $a[1] - $b[1] : $a[0] - $b[0]);
 
         $hull = [];
         // Lower hull
         foreach ($points as $point) {
-            while (count($hull) >= 2 && self::cross($hull[count($hull)-2], $hull[count($hull)-1], $point) <= 0) {
+            while (count($hull) >= 2 && self::cross($hull[count($hull) - 2], $hull[count($hull) - 1], $point) <= 0) {
                 array_pop($hull);
             }
             $hull[] = $point;
@@ -236,13 +258,14 @@ class Helpers
         // Upper hull
         $t = count($hull) + 1;
         for ($i = $n - 2; $i >= 0; $i--) {
-            while (count($hull) >= $t && self::cross($hull[count($hull)-2], $hull[count($hull)-1], $points[$i]) <= 0) {
+            while (count($hull) >= $t && self::cross($hull[count($hull) - 2], $hull[count($hull) - 1], $points[$i]) <= 0) {
                 array_pop($hull);
             }
             $hull[] = $points[$i];
         }
         array_pop($hull); // Remove duplicate last point
         $hull[] = $hull[0]; // Close the ring
+
         return $hull;
     }
 

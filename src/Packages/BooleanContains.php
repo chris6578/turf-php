@@ -17,16 +17,16 @@ class BooleanContains
 {
     public function __invoke(Geometry $geometry1, Geometry $geometry2): bool
     {
+        if ($geometry1 instanceof LineString) {
+            return $geometry2 instanceof Point ? Turf::booleanPointOnLine($geometry2, $geometry1) : false;
+        }
+
         if ($geometry1 instanceof Point) {
             return $geometry2 instanceof Point && Helpers::compareCoords($geometry1->getCoordinates(), $geometry2->getCoordinates());
         }
 
         if ($geometry1 instanceof MultiPoint) {
             return $geometry2 instanceof Point ? self::isPointInMultiPoint($geometry1, $geometry2) : false;
-        }
-
-        if ($geometry1 instanceof LineString) {
-            return $geometry2 instanceof Point ? Turf::booleanPointOnLine($geometry2, $geometry1) : false;
         }
 
         if ($geometry1 instanceof Polygon) {

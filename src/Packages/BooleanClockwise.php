@@ -34,6 +34,6 @@ class BooleanClockwise
             $prev = $cur;
         }
 
-        return $sum > 0;
+        return $sum < 0;
     }
 }

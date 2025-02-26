@@ -19,8 +19,7 @@ class SquareGrid
         string|Unit $units = Unit::KILOMETRES,
         Feature|FeatureCollection|Polygon|MultiPolygon|null $mask = null,
         array $properties = []
-    ): FeatureCollection
-    {
+    ): FeatureCollection {
         if (! $units instanceof Unit) {
             $units = Unit::from($units);
         }

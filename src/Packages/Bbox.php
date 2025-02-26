@@ -20,8 +20,8 @@ class Bbox
         bool $recompute = false
     ): array {
         // If the GeoJSON object has an existing bbox and recompute is false, return it
-        if (property_exists($geojson, 'bbox') && ! $recompute) {
-            return $geojson->bbox;
+        if (! empty($geojson->getBoundingBox()) && ! $recompute) {
+            return $geojson->getBoundingBox()->getBounds();
         }
 
         $minX = INF;

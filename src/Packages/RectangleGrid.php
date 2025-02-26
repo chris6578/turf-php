@@ -30,23 +30,29 @@ class RectangleGrid
         $lonMax = $bbox[2];
         $latMax = $bbox[3];
 
+        if ($deltaPhi > ($latMax - $latMin) || $deltaLambda > ($lonMax - $lonMin)) {
+            return new FeatureCollection([]);
+        }
+
+        $numLatCells = (int) ceil(($latMax - $latMin) / $deltaPhi);
+        $numLonCells = (int) ceil(($lonMax - $lonMin) / $deltaLambda);
+
         $features = [];
-        $lat = $latMin;
-        while ($lat < $latMax) {
-            $lon = $lonMin;
-            while ($lon < $lonMax) {
+        for ($i = 0; $i < $numLatCells; $i++) {
+            $lat = $latMin + $i * $deltaPhi;
+            $cellLatMax = min($lat + $deltaPhi, $latMax); // Clip to bbox
+            for ($j = 0; $j < $numLonCells; $j++) {
+                $lon = $lonMin + $j * $deltaLambda;
+                $cellLonMax = min($lon + $deltaLambda, $lonMax); // Clip to bbox
                 $polygon = new Polygon([[
                     [$lon, $lat],
-                    [$lon + $deltaLambda, $lat],
-                    [$lon + $deltaLambda, $lat + $deltaPhi],
-                    [$lon, $lat + $deltaPhi],
+                    [$cellLonMax, $lat],
+                    [$cellLonMax, $cellLatMax],
+                    [$lon, $cellLatMax],
                     [$lon, $lat],
                 ]]);
-
                 $features[] = new Feature($polygon);
-                $lon += $deltaLambda;
             }
-            $lat += $deltaPhi;
         }
 
         if ($mask !== null) {
@@ -71,19 +77,13 @@ class RectangleGrid
         $phiAvg = ($latMin + $latMax) / 2;
         $phiAvgRad = deg2rad($phiAvg);
 
-        if ($units === 'degrees') {
-            // If units are degrees, use values directly
+        if ($units === Unit::DEGREES) { // Fixed unit check
             $deltaPhi = $cellHeight;
             $deltaLambda = $cellWidth;
         } else {
-            // Convert cell height to radians
             $radiansHeight = Helpers::lengthToRadians($cellHeight, $units);
-            // Convert to degrees for latitude
             $deltaPhi = rad2deg($radiansHeight);
-
-            // Convert cell width to radians
             $radiansWidth = Helpers::lengthToRadians($cellWidth, $units);
-            // Adjust for longitude at average latitude
             $deltaLambda = rad2deg($radiansWidth / cos($phiAvgRad));
         }
 

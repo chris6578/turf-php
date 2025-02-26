@@ -9,21 +9,19 @@ use GeoJson\Geometry\Point;
 
 class BooleanPointOnLine
 {
-    public function __invoke(Point $point, LineString $line, bool $ignoreEndVertices = false, ?float $epsilon = null): bool
+    public function __invoke(Point $point, LineString $line, bool $ignoreEndVertices = false, ?float $epsilon = 1e-10): bool
     {
         $ptCoords = $point->getCoordinates();
         $lineCoords = $line->getCoordinates();
 
         for ($i = 0, $count = count($lineCoords) - 1; $i < $count; $i++) {
-            $excludeBoundary = false;
-            if ($ignoreEndVertices) {
-                if ($i === 0) {
-                    $excludeBoundary = 'start';
-                } elseif ($i === $count - 1) {
-                    $excludeBoundary = 'end';
-                }
-            }
-            if (Helpers::isPointOnLineSegment($lineCoords[$i], $lineCoords[$i + 1], $ptCoords, $excludeBoundary, $epsilon)) {
+            if (Helpers::isPointOnLineSegment(
+                start: $lineCoords[$i],
+                end: $lineCoords[$i + 1],
+                point: $ptCoords,
+                epsilon: $epsilon,
+                ignoreEndVertices: $ignoreEndVertices
+            )) {
                 return true;
             }
         }

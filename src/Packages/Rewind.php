@@ -82,15 +82,6 @@ class Rewind
 
     private static function isClockwise(array $ring): bool
     {
-        $sum = 0;
-        $numPoints = count($ring);
-
-        for ($i = 0; $i < $numPoints - 1; $i++) {
-            [$x1, $y1] = $ring[$i];
-            [$x2, $y2] = $ring[$i + 1];
-            $sum += ($x2 - $x1) * ($y2 + $y1);
-        }
-
-        return $sum > 0;
+        return (new BooleanClockwise)($ring);
     }
 }

@@ -33,13 +33,13 @@ class Bearing
      * Calculates the final bearing between two points.
      *
      * @param  array  $start  The starting point [lon, lat].
-     * @param  array  $end    The ending point [lon, lat].
-     * @return float  The final bearing in degrees [0, 360).
+     * @param  array  $end  The ending point [lon, lat].
+     * @return float The final bearing in degrees [0, 360).
      */
     private static function calculateFinalBearing(array $start, array $end): float
     {
         // Calculate reverse bearing (end to start)
-        $reverseBearing = (new static)($end, $start);
+        $reverseBearing = (new self)($end, $start);
 
         // Final bearing is reverse bearing + 180°, normalized to [0, 360)
         $finalBearing = fmod($reverseBearing + 180, 360);

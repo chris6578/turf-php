@@ -7,9 +7,9 @@ use InvalidArgumentException;
 class Angle
 {
     public function __invoke(
-        array $startPoint,
-        array $midPoint,
-        array $endPoint,
+        $startPoint, // Remove array type hint
+        $midPoint,   // Remove array type hint
+        $endPoint,   // Remove array type hint
         bool $explementary = false,
         bool $mercator = false
     ): float {
@@ -22,14 +22,12 @@ class Angle
         $azimuthOA = self::bearingToAzimuth($mercator ? self::rhumbBearing($midPoint, $startPoint) : self::bearing($midPoint, $startPoint));
         $azimuthOB = self::bearingToAzimuth($mercator ? self::rhumbBearing($midPoint, $endPoint) : self::bearing($midPoint, $endPoint));
 
-        // Ensure clockwise angle
-        if ($azimuthOB < $azimuthOA) {
-            $azimuthOB += 360;
-        }
-        $angleAOB = $azimuthOB - $azimuthOA;
+        // Calculate the smallest angle between the bearings
+        $angleAOB = fmod($azimuthOB - $azimuthOA + 360, 360);
+        $interiorAngle = min($angleAOB, 360 - $angleAOB);
 
-        // Explementary angle if requested
-        return $explementary ? 360 - $angleAOB : $angleAOB;
+        // Return explementary angle if requested, otherwise the interior angle
+        return $explementary ? 360 - $interiorAngle : $interiorAngle;
     }
 
     /**

@@ -58,5 +58,7 @@ class TurfClone
                     $GeoJSON->getGeometries(),
                 );
         }
+
+        return $GeoJSON;
     }
 }

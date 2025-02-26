@@ -57,9 +57,10 @@ class Turf
         return (new Along)($geoJSON, $distance, $units);
     }
 
-    public static function angle(array $startPoint,
-        array $midPoint,
-        array $endPoint,
+    public static function angle(
+        $startPoint,
+        $midPoint,
+        $endPoint,
         bool $explementary = false,
         bool $mercator = false): float
     {
@@ -286,8 +287,7 @@ class Turf
         string|Unit $units = Unit::KILOMETERS,
         Feature|FeatureCollection|Polygon|MultiPolygon|null $mask = null,
         array $properties = []
-    ): FeatureCollection
-    {
+    ): FeatureCollection {
         return (new SquareGrid)($bbox, $cellSize, $units, $mask, $properties);
     }
 
