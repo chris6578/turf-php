@@ -6,6 +6,7 @@ namespace willvincent\Turf\Packages;
 
 use GeoJson\Feature\Feature;
 use GeoJson\Feature\FeatureCollection;
+use GeoJson\Geometry\Geometry;
 use GeoJson\Geometry\MultiPolygon;
 use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
@@ -17,7 +18,10 @@ class Helpers
 {
     public const EARTH_RADIUS = 6371008.8;
 
-    public static $metersUnitConversion = [
+    /**
+     * @var array<string,int|float>
+     */
+    public static array $metersUnitConversion = [
         'meters' => 1,
         'metres' => 1,
         'kilometers' => 1000,
@@ -33,7 +37,7 @@ class Helpers
         'millimetres' => 0.001,
     ];
 
-    public static function factors(?string $factor = null): int|float|array
+    public static function factors(?string $factor = null): mixed
     {
         $factors = [
             'centimeters' => self::EARTH_RADIUS * 100,
@@ -60,7 +64,7 @@ class Helpers
         return $factors;
     }
 
-    public static function areaFactors(?string $factor = null): int|float|array
+    public static function areaFactors(?string $factor = null): mixed
     {
         $factors = [
             'acres' => 0.000247105,
@@ -137,6 +141,14 @@ class Helpers
         return $distance / self::factors()[$units->value];
     }
 
+    /**
+     * @param float[] $start
+     * @param float[] $end
+     * @param float[] $point
+     * @param float|null $epsilon
+     * @param bool|null $ignoreEndVertices
+     * @return bool
+     */
     public static function isPointOnLineSegment(array $start, array $end, array $point, $epsilon = 1e-10, $ignoreEndVertices = false): bool
     {
         if ($ignoreEndVertices && ($start === $point || $end === $point)) {
@@ -170,11 +182,21 @@ class Helpers
         return true;
     }
 
+    /**
+     * @param float[] $pair1
+     * @param float[] $pair2
+     * @return bool
+     */
     public static function compareCoords(array $pair1, array $pair2): bool
     {
         return $pair1[0] === $pair2[0] && $pair1[1] === $pair2[1];
     }
 
+    /**
+     * @param Feature[] $gridFeatures
+     * @param Feature|FeatureCollection|Polygon|MultiPolygon $mask
+     * @return mixed[]
+     */
     public static function filterGridByMask(
         array $gridFeatures,
         Feature|FeatureCollection|Polygon|MultiPolygon $mask
@@ -203,7 +225,12 @@ class Helpers
         return $filteredFeatures;
     }
 
-    private static function anyPointInPolygon(array $points, Polygon|MultiPolygon $polygon): bool
+    /**
+     * @param mixed[] $points
+     * @param Polygon|MultiPolygon|Geometry|null $polygon
+     * @return bool
+     */
+    private static function anyPointInPolygon(array $points, Polygon|MultiPolygon|Geometry|null $polygon): bool
     {
         foreach ($points as $point) {
             if (Turf::booleanPointInPolygon(new Point($point), $polygon)) {
@@ -214,6 +241,12 @@ class Helpers
         return false;
     }
 
+    /**
+     * @param float[] $point1
+     * @param float[] $point2
+     * @param Unit $units
+     * @return float
+     */
     public static function haversineDistance(
         array $point1,
         array $point2,
@@ -235,42 +268,5 @@ class Helpers
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
 
         return $earthRadius * $c;
-    }
-
-    private static function convexHull(array $points): array
-    {
-        $n = count($points);
-        if ($n < 3) {
-            return $points;
-        }
-
-        // Sort by x-coordinate (then y)
-        usort($points, fn ($a, $b) => $a[0] === $b[0] ? $a[1] - $b[1] : $a[0] - $b[0]);
-
-        $hull = [];
-        // Lower hull
-        foreach ($points as $point) {
-            while (count($hull) >= 2 && self::cross($hull[count($hull) - 2], $hull[count($hull) - 1], $point) <= 0) {
-                array_pop($hull);
-            }
-            $hull[] = $point;
-        }
-        // Upper hull
-        $t = count($hull) + 1;
-        for ($i = $n - 2; $i >= 0; $i--) {
-            while (count($hull) >= $t && self::cross($hull[count($hull) - 2], $hull[count($hull) - 1], $points[$i]) <= 0) {
-                array_pop($hull);
-            }
-            $hull[] = $points[$i];
-        }
-        array_pop($hull); // Remove duplicate last point
-        $hull[] = $hull[0]; // Close the ring
-
-        return $hull;
-    }
-
-    private static function cross(array $o, array $a, array $b): float
-    {
-        return ($a[0] - $o[0]) * ($b[1] - $o[1]) - ($a[1] - $o[1]) * ($b[0] - $o[0]);
     }
 }

@@ -18,13 +18,13 @@ class Rewind
     public function __invoke(
         GeoJson $geoJSON,
         bool $reverse = false,
-    ): GeometryCollection|FeatureCollection|LineString|MultiLineString|Polygon|MultiPolygon {
+    ): GeometryCollection|FeatureCollection|LineString|MultiLineString|Polygon|MultiPolygon|GeoJson {
         if ($geoJSON instanceof FeatureCollection) {
-            $features = array_map(fn ($feature) => self::rewindFeature($feature, $reverse), $geoJSON->getFeatures());
+            $features = array_map(fn ($feature) => self::rewindFeature($feature, $reverse)->getGeometry(), $geoJSON->getFeatures());
 
             return new FeatureCollection($features);
         } elseif ($geoJSON instanceof GeometryCollection) {
-            $geometries = array_map(fn ($geometry) => self::rewindFeature($geometry, $reverse), $geoJSON->getGeometries());
+            $geometries = array_map(fn ($geometry) => self::rewindFeature($geometry, $reverse)->getGeometry(), $geoJSON->getGeometries());
 
             return new GeometryCollection($geometries);
         } else {
@@ -37,7 +37,7 @@ class Rewind
         bool $reverse
     ): Feature|LineString|MultiLineString|Polygon|MultiPolygon|Point|MultiPoint|GeoJson {
         if ($geoJSON instanceof Feature) {
-            return new Feature(self::rewindFeature($geoJSON->getGeometry(), $reverse));
+            return new Feature(self::rewindFeature($geoJSON->getGeometry(), $reverse)->getGeometry());
         }
 
         switch (get_class($geoJSON)) {
@@ -54,6 +54,11 @@ class Rewind
         }
     }
 
+    /**
+     * @param mixed[] $coords
+     * @param bool $reverse
+     * @return mixed[]
+     */
     private static function rewindLineString(array $coords, bool $reverse): array
     {
         if (self::isClockwise($coords) === $reverse) {
@@ -63,6 +68,11 @@ class Rewind
         return $coords;
     }
 
+    /**
+     * @param mixed[] $coords
+     * @param bool $reverse
+     * @return mixed[]
+     */
     private static function rewindPolygon(array $coords, bool $reverse): array
     {
         // Ensure outer ring is counterclockwise
@@ -80,6 +90,10 @@ class Rewind
         return $coords;
     }
 
+    /**
+     * @param mixed[] $ring
+     * @return bool
+     */
     private static function isClockwise(array $ring): bool
     {
         return (new BooleanClockwise)($ring);

@@ -189,7 +189,7 @@ class Turf
     }
 
     /** Determines if a point is within a polygon. */
-    public static function booleanPointInPolygon(Point $point, Polygon|MultiPolygon $polygon, bool $ignoreBoundary = false): bool
+    public static function booleanPointInPolygon(Point $point, Polygon|MultiPolygon|Geometry|null $polygon, bool $ignoreBoundary = false): bool
     {
         return (new BooleanPointInPolygon)($point, $polygon, $ignoreBoundary);
     }
@@ -298,7 +298,7 @@ class Turf
     public static function rewind(
         GeoJson $geoJSON,
         bool $reverse = false,
-    ): GeometryCollection|FeatureCollection|LineString|MultiLineString|Polygon|MultiPolygon {
+    ): GeoJson|GeometryCollection|FeatureCollection|LineString|MultiLineString|Polygon|MultiPolygon {
         return (new Rewind)($geoJSON, $reverse);
     }
 

@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace willvincent\Turf\Packages;
 
+use GeoJson\Geometry\Geometry;
 use GeoJson\Geometry\MultiPolygon;
 use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 
 class BooleanPointInPolygon
 {
-    public function __invoke(Point $point, Polygon|MultiPolygon $polygon, bool $ignoreBoundary = false): bool
+    public function __invoke(Point $point, Polygon|MultiPolygon|Geometry|null $polygon, bool $ignoreBoundary = false): bool
     {
         $pt = $point->getCoordinates();
         $polys = $polygon instanceof Polygon ? [$polygon->getCoordinates()] : $polygon->getCoordinates();

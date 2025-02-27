@@ -12,6 +12,11 @@ use InvalidArgumentException;
 
 class BboxClip
 {
+    /**
+     * @param GeoJson $feature
+     * @param float[] $bbox
+     * @return Feature
+     */
     public function __invoke(
         GeoJson $feature,
         array $bbox
@@ -49,9 +54,9 @@ class BboxClip
     /**
      * Clips a LineString using the Cohen-Sutherland algorithm.
      *
-     * @param  array  $line  The line coordinates.
-     * @param  array  $bbox  The bounding box [minX, minY, maxX, maxY].
-     * @return array The clipped line coordinates.
+     * @param  mixed[]  $line  The line coordinates.
+     * @param  float[]  $bbox  The bounding box [minX, minY, maxX, maxY].
+     * @return mixed[] The clipped line coordinates.
      */
     private static function clipLine(array $line, array $bbox): array
     {
@@ -74,9 +79,9 @@ class BboxClip
     /**
      * Clips a Polygon using the Sutherland-Hodgman algorithm.
      *
-     * @param  array  $rings  The polygon rings.
-     * @param  array  $bbox  The bounding box [minX, minY, maxX, maxY].
-     * @return array The clipped polygon rings.
+     * @param  mixed[]  $rings  The polygon rings.
+     * @param  float[]  $bbox  The bounding box [minX, minY, maxX, maxY].
+     * @return mixed[] The clipped polygon rings.
      */
     private static function clipPolygon(array $rings, array $bbox): array
     {
@@ -95,12 +100,12 @@ class BboxClip
     /**
      * Performs Cohen-Sutherland line clipping algorithm.
      *
-     * @param  array  $p1  First point [x, y].
-     * @param  array  $p2  Second point [x, y].
-     * @param  array  $bbox  Bounding box [minX, minY, maxX, maxY].
-     * @return array|null Clipped line segment or null if outside.
+     * @param  float[]  $p1  First point [x, y].
+     * @param  float[]  $p2  Second point [x, y].
+     * @param  float[]  $bbox  Bounding box [minX, minY, maxX, maxY].
+     * @return mixed[] Clipped line segment or null if outside.
      */
-    private static function cohenSutherlandClip(array $p1, array $p2, array $bbox): ?array
+    private static function cohenSutherlandClip(array $p1, array $p2, array $bbox): array
     {
         [$minX, $minY, $maxX, $maxY] = $bbox;
 
@@ -164,9 +169,9 @@ class BboxClip
     /**
      * Performs Sutherland-Hodgman polygon clipping.
      *
-     * @param  array  $polygon  The polygon coordinates.
-     * @param  array  $bbox  The bounding box [minX, minY, maxX, maxY].
-     * @return array The clipped polygon.
+     * @param  mixed[]  $polygon  The polygon coordinates.
+     * @param  float[]  $bbox  The bounding box [minX, minY, maxX, maxY].
+     * @return mixed[] The clipped polygon.
      */
     private static function sutherlandHodgmanClip(array $polygon, array $bbox): array
     {
@@ -211,8 +216,8 @@ class BboxClip
     /**
      * Checks if a point is inside the bounding box.
      *
-     * @param  array  $point  The point [x, y].
-     * @param  array  $bbox  The bounding box [minX, minY, maxX, maxY].
+     * @param  float[]  $point  The point [x, y].
+     * @param  float[]  $bbox  The bounding box [minX, minY, maxX, maxY].
      * @return bool True if inside, false otherwise.
      */
     private static function insideBoundingBox(array $point, array $bbox): bool
@@ -225,10 +230,10 @@ class BboxClip
     /**
      * Finds the intersection of a line segment with a bounding box.
      *
-     * @param  array  $p1  The first point [x, y].
-     * @param  array  $p2  The second point [x, y].
-     * @param  array  $bbox  The bounding box [minX, minY, maxX, maxY].
-     * @return array The intersection point.
+     * @param  float[]  $p1  The first point [x, y].
+     * @param  float[]  $p2  The second point [x, y].
+     * @param  float[]  $bbox  The bounding box [minX, minY, maxX, maxY].
+     * @return float[] The intersection point.
      */
     private static function lineIntersection(array $p1, array $p2, array $bbox): array
     {
