@@ -13,7 +13,7 @@ use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 use willvincent\Turf\Turf;
 
-class booleanValid
+class BooleanValid
 {
     public function __invoke(Geometry $feature): bool
     {
@@ -35,12 +35,27 @@ class booleanValid
 
     private static function validateMultiPointOrLineString(Geometry $feature): bool
     {
+        if ($feature instanceof LineString) {
+            $coords = $feature->getCoordinates();
+            if (count($coords) < 2) {
+                return false;
+            }
+            $hasDistinct = false;
+            for ($i = 1; $i < count($coords); $i++) {
+                if ($coords[$i][0] !== $coords[0][0] || $coords[$i][1] !== $coords[0][1]) {
+                    $hasDistinct = true;
+                    break;
+                }
+            }
+            if (!$hasDistinct) {
+                return false; // All points are identical
+            }
+        }
         foreach ($feature->getCoordinates() as $coord) {
             if (count($coord) < 2) {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -48,14 +63,13 @@ class booleanValid
     {
         $rings = $polygon->getCoordinates();
         foreach ($rings as $i => $ring) {
-            if (count($ring) < 4 || ! self::checkRingsClose($ring) || self::checkRingsForSpikesPunctures($ring)) {
+            if (count($ring) < 4 || !self::checkRingsClose($ring) || self::hasSelfIntersections($ring)) {
                 return false;
             }
             if ($i > 0 && self::polygonsIntersect($rings[0], $ring)) {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -64,52 +78,40 @@ class booleanValid
         $polygons = $multiPolygon->getCoordinates();
         foreach ($polygons as $i => $polygon) {
             foreach ($polygon as $j => $ring) {
-                if (count($ring) < 4 || ! self::checkRingsClose($ring) || self::checkRingsForSpikesPunctures($ring)) {
+                if (count($ring) < 4 || !self::checkRingsClose($ring) || self::hasSelfIntersections($ring)) {
                     return false;
                 }
                 if ($j > 0 && self::polygonsIntersect($polygon[0], $ring)) {
                     return false;
                 }
-                if ($j === 0 && ! self::checkPolygonAgainstOthers($polygon, $polygons, $i)) {
+                if ($j === 0 && !self::checkPolygonAgainstOthers($polygon, $polygons, $i)) {
                     return false;
                 }
             }
         }
-
         return true;
     }
 
-    /**
-     * @param mixed[] $ring
-     * @return bool
-     */
     private static function checkRingsClose(array $ring): bool
     {
         return $ring[0] === end($ring);
     }
 
-    /**
-     * @param mixed[] $ring
-     * @return bool
-     */
-    private static function checkRingsForSpikesPunctures(array $ring): bool
+    private static function hasSelfIntersections(array $ring): bool
     {
-        foreach ($ring as $i => $point) {
-            for ($j = $i + 1; $j < count($ring) - 2; $j++) {
-                if (Helpers::isPointOnLineSegment($ring[$j], $ring[$j + 1], $point)) {
+        for ($i = 0; $i < count($ring) - 1; $i++) {
+            for ($j = $i + 2; $j < count($ring) - 1; $j++) {
+                if ($i === 0 && $j === count($ring) - 2) {
+                    continue; // Skip closing segment
+                }
+                if (Helpers::doSegmentsIntersect($ring[$i], $ring[$i + 1], $ring[$j], $ring[$j + 1])) {
                     return true;
                 }
             }
         }
-
         return false;
     }
 
-    /**
-     * @param mixed[] $poly1
-     * @param mixed[] $poly2
-     * @return bool
-     */
     private static function polygonsIntersect(array $poly1, array $poly2): bool
     {
         foreach ($poly1 as $point) {
@@ -117,24 +119,16 @@ class booleanValid
                 return true;
             }
         }
-
         return false;
     }
 
-    /**
-     * @param mixed[] $polygon
-     * @param mixed[] $polygons
-     * @param int $index
-     * @return bool
-     */
     private static function checkPolygonAgainstOthers(array $polygon, array $polygons, int $index): bool
     {
         foreach (array_slice($polygons, $index + 1) as $otherPolygon) {
-            if (Turf::booleanIntersect($polygon[0], $otherPolygon[0])) {
+            if (Turf::booleanIntersect(new Polygon([$polygon[0]]), new Polygon([$otherPolygon[0]]))) {
                 return false;
             }
         }
-
         return true;
     }
 }

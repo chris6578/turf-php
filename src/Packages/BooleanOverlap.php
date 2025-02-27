@@ -19,15 +19,16 @@ class BooleanOverlap
             throw new InvalidArgumentException('Features must be of the same type');
         }
 
-        if ($geometry1 instanceof MultiPoint && $geometry2 instanceof MultiPoint) {
-            return self::doMultiPointsOverlap($geometry1, $geometry2);
-        }
-
-        if ($geometry1 instanceof LineString && $geometry2 instanceof LineString) {
+        if (get_class($geometry1) == LineString::class && get_class($geometry2) == LineString::class) {
             return self::doLineStringsOverlap($geometry1, $geometry2);
         }
 
-        if ($geometry1 instanceof Polygon && $geometry2 instanceof Polygon) {
+        if (get_class($geometry1) == MultiPoint::class && get_class($geometry2) == MultiPoint::class) {
+            return self::doMultiPointsOverlap($geometry1, $geometry2);
+        }
+
+
+        if (get_class($geometry1) == Polygon::class && get_class($geometry2) == Polygon::class) {
             return self::doPolygonsOverlap($geometry1, $geometry2);
         }
 

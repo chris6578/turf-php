@@ -34,7 +34,7 @@ use willvincent\Turf\Packages\BooleanParallel;
 use willvincent\Turf\Packages\BooleanPointInPolygon;
 use willvincent\Turf\Packages\BooleanPointOnLine;
 use willvincent\Turf\Packages\BooleanTouches;
-use willvincent\Turf\Packages\booleanValid;
+use willvincent\Turf\Packages\BooleanValid;
 use willvincent\Turf\Packages\BooleanWithin;
 use willvincent\Turf\Packages\Circle;
 use willvincent\Turf\Packages\Destination;

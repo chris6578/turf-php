@@ -25,14 +25,14 @@ class BooleanEqual
      * @param  int  $precision  Decimal precision.
      * @return mixed[] Rounded coordinates.
      */
-    private static function roundCoordinates(array $coords, int $precision): array
+    private static function roundCoordinates($coords, int $precision)
     {
-        return array_map(static function ($coord) use ($precision) {
-            if (is_array($coord[0])) {
+        if (is_array($coords)) {
+            return array_map(static function ($coord) use ($precision) {
                 return self::roundCoordinates($coord, $precision);
-            }
-
-            return array_map(static fn ($val) => round($val, $precision), $coord);
-        }, $coords);
+            }, $coords);
+        } else {
+            return round($coords, $precision);
+        }
     }
 }

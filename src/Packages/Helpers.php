@@ -269,4 +269,29 @@ class Helpers
 
         return $earthRadius * $c;
     }
+
+    /**
+     * Determines whether two line segments intersect.
+     *
+     * @param array $p1 Start point of first segment [x, y].
+     * @param array $p2 End point of first segment [x, y].
+     * @param array $p3 Start point of second segment [x, y].
+     * @param array $p4 End point of second segment [x, y].
+     * @return bool True if segments intersect, false otherwise.
+     */
+    public static function doSegmentsIntersect(array $p1, array $p2, array $p3, array $p4): bool
+    {
+        $orientation = function ($p, $q, $r) {
+            $val = ($q[1] - $p[1]) * ($r[0] - $q[0]) - ($q[0] - $p[0]) * ($r[1] - $q[1]);
+            if (abs($val) < 1e-10) return 0; // Collinear
+            return ($val > 0) ? 1 : 2; // Clockwise or counterclockwise
+        };
+
+        $o1 = $orientation($p1, $p2, $p3);
+        $o2 = $orientation($p1, $p2, $p4);
+        $o3 = $orientation($p3, $p4, $p1);
+        $o4 = $orientation($p3, $p4, $p2);
+
+        return ($o1 !== $o2 && $o3 !== $o4); // General case: segments cross
+    }
 }
