@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+        bootstrap="vendor/autoload.php"
+        colors="true"
+        stopOnFailure="false">
+    <php>
+        <ini name="memory_limit" value="512M" />
+    </php>
+    <testsuites>
+        <testsuite name="Turf PHP Tests">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
