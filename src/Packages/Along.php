@@ -54,10 +54,10 @@ class Along
     /**
      * Interpolates a point between two points based on a fraction.
      *
-     * @param  array  $start  The start point [lon, lat].
-     * @param  array  $end  The end point [lon, lat].
+     * @param  float[]  $start  The start point [lon, lat].
+     * @param  float[]  $end  The end point [lon, lat].
      * @param  float  $fraction  The fraction along the segment (0 to 1).
-     * @return array Interpolated point [lon, lat].
+     * @return float[] Interpolated point [lon, lat].
      */
     private static function interpolatePoint(array $start, array $end, float $fraction): array
     {

@@ -57,6 +57,14 @@ class Turf
         return (new Along)($geoJSON, $distance, $units);
     }
 
+    /**
+     * @param mixed $startPoint
+     * @param mixed $midPoint
+     * @param mixed $endPoint
+     * @param bool $explementary
+     * @param bool $mercator
+     * @return float
+     */
     public static function angle(
         $startPoint,
         $midPoint,
@@ -77,6 +85,9 @@ class Turf
 
     /**
      * Calculate the bounding box (BBox) of a given GeoJSON object.
+     * @param GeoJson $geoJSON
+     * @param bool|null $recompute
+     * @return float[]
      */
     public static function bbox(GeoJson $geoJSON, ?bool $recompute = false): array
     {
@@ -85,6 +96,10 @@ class Turf
 
     /**
      * Clips a GeoJSON Feature to a given bounding box.
+     *
+     * @param GeoJson $geoJSON
+     * @param float[] $bbox
+     * @return Feature
      */
     public static function bboxClip(GeoJson $geoJSON, array $bbox): Feature
     {
@@ -93,19 +108,33 @@ class Turf
 
     /**
      * Generates a Polygon feature from a bbox.
+     * @param float[] $bbox
+     * @param float[] $properties
+     * @param $id
+     * @return Feature
      */
-    public static function bboxPolygon(array $bbox, array $properties = [], $id = null): Feature
+    public static function bboxPolygon(array $bbox, array $properties = [], mixed $id = null): Feature
     {
         return (new BboxPolygon)($bbox, $properties, $id);
     }
 
-    /** Calculates the geographic bearing between two points. */
+    /**
+     * Calculates the geographic bearing between two points.
+     * @param float[] $start
+     * @param float[] $end
+     * @param bool $final
+     * @return float
+     */
     public static function bearing(array $start, array $end, bool $final = false): float
     {
         return (new Bearing)($start, $end, $final);
     }
 
-    /** Determines if a ring (LineString or Polygon) is clockwise. */
+    /**
+     * Determines if a ring (LineString or Polygon) is clockwise.
+     * @param LineString|Polygon|mixed[] $geometry
+     * @return bool
+     */
     public static function booleanClockwise(LineString|Polygon|array $geometry): bool
     {
         return (new BooleanClockwise)($geometry);
@@ -189,7 +218,15 @@ class Turf
         return (new BooleanWithin)($geometry1, $geometry2);
     }
 
-    /** Generate a circular polygon around the specified center point. */
+    /**
+     * Generate a circular polygon around the specified center point.
+     * @param float[]|Point $center
+     * @param float $radius
+     * @param int $steps
+     * @param string|Unit $units
+     * @param mixed[] $properties
+     * @return GeoJson
+     */
     public static function circle(
         array|Point $center,
         float $radius,
@@ -210,9 +247,15 @@ class Turf
     }
 
     /**
-     * Calculate the location of a destination point from an origin point
-     * given a distance in degrees, radians, miles, or kilometers;
-     * and bearing in degrees.
+     *  Calculate the location of a destination point from an origin point
+     *  given a distance in degrees, radians, miles, or kilometers;
+     *  and bearing in degrees.
+     *
+     * @param float[]|Point $origin
+     * @param float $distance
+     * @param float $bearing
+     * @param string|Unit $units
+     * @return Point
      */
     public static function destination(
         array|Point $origin,
@@ -224,7 +267,10 @@ class Turf
     }
 
     /**
-     * Calculate the distance between two points.
+     * @param float[]|Point $from
+     * @param float[]|Point $to
+     * @param string|Unit $units
+     * @return float
      */
     public static function distance(
         array|Point $from,
@@ -238,7 +284,7 @@ class Turf
      * Detects self-intersection in Polygons and LineStrings, and returns
      * a FeatureCollection of intersecting points.
      *
-     * @param  Polygon|LineString  $geometry
+     * @param  Polygon|LineString  $geoJSON
      */
     public static function kinks(
         GeoJson $geoJSON
@@ -248,8 +294,6 @@ class Turf
 
     /**
      * Rewinds a polygon or multipolygon.
-     *
-     * @param  GeoJson  $polygon
      */
     public static function rewind(
         GeoJson $geoJSON,
@@ -269,6 +313,15 @@ class Turf
         return (new Simplify)($geoJSON);
     }
 
+    /**
+     * @param float[] $bbox
+     * @param float $cellWidth
+     * @param float $cellHeight
+     * @param string|Unit $units
+     * @param Feature|FeatureCollection|Polygon|MultiPolygon|null $mask
+     * @param mixed[] $properties
+     * @return FeatureCollection
+     */
     public static function rectangleGrid(
         array $bbox,
         float $cellWidth,
@@ -280,7 +333,14 @@ class Turf
         return (new RectangleGrid)($bbox, $cellWidth, $cellHeight, $units, $mask, $properties);
     }
 
-    /** Creates a grid of square polygons within a bounding box. */
+    /**
+     * @param float[] $bbox
+     * @param float $cellSize
+     * @param string|Unit $units
+     * @param Feature|FeatureCollection|Polygon|MultiPolygon|null $mask
+     * @param mixed[] $properties
+     * @return FeatureCollection
+     */
     public static function squareGrid(
         array $bbox,
         float $cellSize,

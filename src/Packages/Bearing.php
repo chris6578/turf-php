@@ -4,6 +4,12 @@ namespace willvincent\Turf\Packages;
 
 class Bearing
 {
+    /**
+     * @param float[] $start
+     * @param float[] $end
+     * @param bool $final
+     * @return float
+     */
     public function __invoke(array $start, array $end, bool $final = false): float
     {
         // Convert coordinates to radians
@@ -32,8 +38,8 @@ class Bearing
     /**
      * Calculates the final bearing between two points.
      *
-     * @param  array  $start  The starting point [lon, lat].
-     * @param  array  $end  The ending point [lon, lat].
+     * @param  float[]  $start  The starting point [lon, lat].
+     * @param  float[]  $end  The ending point [lon, lat].
      * @return float The final bearing in degrees [0, 360).
      */
     private static function calculateFinalBearing(array $start, array $end): float

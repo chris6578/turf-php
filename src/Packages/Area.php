@@ -53,7 +53,7 @@ class Area
     /**
      * Calculates the area of a single polygon using the spherical excess formula.
      *
-     * @param  array  $coordinates  Polygon coordinates (including holes).
+     * @param  mixed[]  $coordinates  Polygon coordinates (including holes).
      * @return float The polygon area in square meters.
      */
     private static function calculatePolygonArea(array $coordinates): float
@@ -75,7 +75,7 @@ class Area
     /**
      * Calculates the area of a linear ring using the spherical excess formula.
      *
-     * @param  array  $ring  The linear ring coordinates.
+     * @param  mixed[]  $ring  The linear ring coordinates.
      * @return float The area of the ring.
      */
     private static function calculateRingArea(array $ring): float

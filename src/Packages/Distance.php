@@ -10,6 +10,12 @@ use willvincent\Turf\Enums\Unit;
 
 class Distance
 {
+    /**
+     * @param float[]|Point $from
+     * @param float[]|Point $to
+     * @param string|Unit $units
+     * @return float
+     */
     public function __invoke(
         array|Point $from,
         array|Point $to,

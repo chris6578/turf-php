@@ -27,8 +27,8 @@ class BooleanPointInPolygon
     /**
      * Checks if a point is inside a single polygon.
      *
-     * @param  array  $point  The point coordinates.
-     * @param  array  $polygon  The polygon coordinates.
+     * @param  float[]  $point  The point coordinates.
+     * @param  mixed[]  $polygon  The polygon coordinates.
      * @param  bool  $ignoreBoundary  Whether to ignore points on the boundary.
      * @return bool True if inside, false otherwise.
      */
@@ -60,8 +60,8 @@ class BooleanPointInPolygon
     /**
      * Checks if a point is on the boundary of a polygon.
      *
-     * @param  array  $point  The point coordinates.
-     * @param  array  $polygon  The polygon coordinates.
+     * @param  float[]  $point  The point coordinates.
+     * @param  mixed[]  $polygon  The polygon coordinates.
      * @return bool True if on boundary, false otherwise.
      */
     private static function isPointOnBoundary(array $point, array $polygon): bool

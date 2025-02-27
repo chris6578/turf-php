@@ -86,6 +86,11 @@ class BooleanCrosses
         return false;
     }
 
+    /**
+     * @param LineString $line1
+     * @param LineString $line2
+     * @return mixed[]
+     */
     private function findIntersections(LineString $line1, LineString $line2): array
     {
         $intersections = [];
@@ -105,6 +110,13 @@ class BooleanCrosses
         return $intersections;
     }
 
+    /**
+     * @param float[] $p1
+     * @param float[] $p2
+     * @param float[] $p3
+     * @param float[] $p4
+     * @return float[]|null
+     */
     private function lineSegmentIntersection(array $p1, array $p2, array $p3, array $p4): ?array
     {
         $denominator = ($p4[1] - $p3[1]) * ($p2[0] - $p1[0]) - ($p4[0] - $p3[0]) * ($p2[1] - $p1[1]);
@@ -124,6 +136,11 @@ class BooleanCrosses
         return null;
     }
 
+    /**
+     * @param float[] $point
+     * @param LineString $line
+     * @return bool
+     */
     private function isEndpoint(array $point, LineString $line): bool
     {
         $coords = $line->getCoordinates();

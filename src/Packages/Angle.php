@@ -7,9 +7,9 @@ use InvalidArgumentException;
 class Angle
 {
     public function __invoke(
-        $startPoint, // Remove array type hint
-        $midPoint,   // Remove array type hint
-        $endPoint,   // Remove array type hint
+        mixed $startPoint, // Remove array type hint
+        mixed $midPoint,   // Remove array type hint
+        mixed $endPoint,   // Remove array type hint
         bool $explementary = false,
         bool $mercator = false
     ): float {
@@ -44,8 +44,8 @@ class Angle
     /**
      * Calculates the great-circle bearing between two points using Haversine formula.
      *
-     * @param  array  $from  The starting point [lon, lat].
-     * @param  array  $to  The ending point [lon, lat].
+     * @param  float[]  $from  The starting point [lon, lat].
+     * @param  float[]  $to  The ending point [lon, lat].
      * @return float The bearing in degrees.
      */
     private static function bearing(array $from, array $to): float
@@ -64,8 +64,8 @@ class Angle
     /**
      * Calculates the rhumb-line bearing between two points.
      *
-     * @param  array  $from  The starting point [lon, lat].
-     * @param  array  $to  The ending point [lon, lat].
+     * @param  float[]  $from  The starting point [lon, lat].
+     * @param  float[]  $to  The ending point [lon, lat].
      * @return float The rhumb-line bearing in degrees.
      */
     private static function rhumbBearing(array $from, array $to): float

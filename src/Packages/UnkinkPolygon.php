@@ -32,7 +32,7 @@ class UnkinkPolygon
      * Flattens a GeoJSON object into an array of Polygon Features.
      *
      * @param  GeoJson  $geojson  A FeatureCollection, Feature, Polygon, or MultiPolygon.
-     * @return array An array of Polygon Features.
+     * @return mixed[] An array of Polygon Features.
      */
     private static function flattenPolygons(GeoJson $geojson): array
     {
@@ -65,7 +65,7 @@ class UnkinkPolygon
      * Splits a self-intersecting polygon into valid simple polygons.
      *
      * @param  Feature  $polygonFeature  A self-intersecting polygon feature.
-     * @return array An array of simple polygon features.
+     * @return mixed[] An array of simple polygon features.
      */
     private static function splitSelfIntersectingPolygon(Feature $polygonFeature): array
     {
@@ -86,8 +86,8 @@ class UnkinkPolygon
     /**
      * Detects self-intersections in a polygon ring.
      *
-     * @param  array  $ring  The polygon's outer ring coordinates.
-     * @return array List of intersection points.
+     * @param  mixed[]  $ring  The polygon's outer ring coordinates.
+     * @return mixed[] List of intersection points.
      */
     private static function detectIntersections(array $ring): array
     {
@@ -112,11 +112,11 @@ class UnkinkPolygon
     /**
      * Finds the intersection point of two line segments.
      *
-     * @param  array  $p1  Line 1 start [x, y].
-     * @param  array  $p2  Line 1 end [x, y].
-     * @param  array  $p3  Line 2 start [x, y].
-     * @param  array  $p4  Line 2 end [x, y].
-     * @return array|null Intersection point or null.
+     * @param  float[]  $p1  Line 1 start [x, y].
+     * @param  float[]  $p2  Line 1 end [x, y].
+     * @param  float[]  $p3  Line 2 start [x, y].
+     * @param  float[]  $p4  Line 2 end [x, y].
+     * @return float[]|null Intersection point or null.
      */
     private static function lineIntersection(array $p1, array $p2, array $p3, array $p4): ?array
     {
@@ -143,9 +143,9 @@ class UnkinkPolygon
     /**
      * Splits a polygon into valid simple polygons at intersection points.
      *
-     * @param  array  $ring  The outer ring of the polygon.
-     * @param  array  $intersections  List of intersection points.
-     * @return array List of simple polygons.
+     * @param  mixed[]  $ring  The outer ring of the polygon.
+     * @param  mixed[]  $intersections  List of intersection points.
+     * @return mixed[] List of simple polygons.
      */
     private static function performPolygonSplitting(array $ring, array $intersections): array
     {

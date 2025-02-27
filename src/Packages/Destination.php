@@ -9,6 +9,13 @@ use willvincent\Turf\Enums\Unit;
 
 class Destination
 {
+    /**
+     * @param float[]|Point $origin
+     * @param float $distance
+     * @param float $bearing
+     * @param string|Unit $units
+     * @return Point
+     */
     public function __invoke(
         array|Point $origin,
         float $distance,

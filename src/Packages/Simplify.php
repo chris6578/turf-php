@@ -25,11 +25,11 @@ class Simplify
         }
 
         if ($geojson instanceof FeatureCollection) {
-            $features = array_map(fn ($feature) => self::simplifyFeature($feature, $tolerance, $highQuality), $geojson->getFeatures());
+            $features = array_map(fn ($feature) => self::simplifyFeature($feature, $tolerance, $highQuality)->getGeometry(), $geojson->getFeatures());
 
             return new FeatureCollection($features);
         } elseif ($geojson instanceof GeometryCollection) {
-            $geometries = array_map(fn ($geometry) => self::simplifyFeature($geometry, $tolerance, $highQuality), $geojson->getGeometries());
+            $geometries = array_map(fn ($geometry) => self::simplifyFeature($geometry, $tolerance, $highQuality)->getGeometry(), $geojson->getGeometries());
 
             return new GeometryCollection($geometries);
         } else {
@@ -51,7 +51,7 @@ class Simplify
         bool $highQuality
     ): Feature|LineString|MultiLineString|Polygon|MultiPolygon|GeoJson {
         if ($geojson instanceof Feature) {
-            return new Feature(self::simplifyFeature($geojson->getGeometry(), $tolerance, $highQuality));
+            return new Feature(self::simplifyFeature($geojson->getGeometry(), $tolerance, $highQuality)->getGeometry());
         }
 
         switch (get_class($geojson)) {
@@ -71,10 +71,10 @@ class Simplify
     /**
      * Simplifies a LineString using Ramer-Douglas-Peucker algorithm.
      *
-     * @param  array  $coords  LineString coordinates.
+     * @param  mixed[]  $coords  LineString coordinates.
      * @param  float  $tolerance  The simplification tolerance.
      * @param  bool  $highQuality  If true, uses a high-quality simplification algorithm.
-     * @return array Simplified coordinates.
+     * @return mixed[] Simplified coordinates.
      */
     private static function simplifyLineString(
         array $coords,
@@ -87,10 +87,10 @@ class Simplify
     /**
      * Simplifies a Polygon while keeping it valid.
      *
-     * @param  array  $coords  Polygon coordinates.
+     * @param  mixed[]  $coords  Polygon coordinates.
      * @param  float  $tolerance  The simplification tolerance.
      * @param  bool  $highQuality  If true, uses a high-quality simplification algorithm.
-     * @return array Simplified polygon coordinates.
+     * @return mixed[] Simplified polygon coordinates.
      */
     private static function simplifyPolygon(
         array $coords,
@@ -123,7 +123,7 @@ class Simplify
     /**
      * Checks if a Polygon ring is valid (must have at least 3 unique points).
      *
-     * @param  array  $ring  Polygon ring coordinates.
+     * @param  mixed[]  $ring  Polygon ring coordinates.
      * @return bool True if valid, false otherwise.
      */
     private static function checkPolygonValidity(array $ring): bool
@@ -134,9 +134,9 @@ class Simplify
     /**
      * Ramer-Douglas-Peucker algorithm for simplifying a set of points.
      *
-     * @param  array  $points  The list of points.
+     * @param  array<float[]>  $points  The list of points.
      * @param  float  $epsilon  The simplification tolerance.
-     * @return array The simplified list of points.
+     * @return mixed[] The simplified list of points.
      */
     private static function ramerDouglasPeucker(array $points, float $epsilon): array
     {
@@ -169,9 +169,9 @@ class Simplify
     /**
      * Calculates the perpendicular distance from a point to a line.
      *
-     * @param  array  $point  The point [x, y].
-     * @param  array  $lineStart  The start of the line [x, y].
-     * @param  array  $lineEnd  The end of the line [x, y].
+     * @param  float[]  $point  The point [x, y].
+     * @param  float[]  $lineStart  The start of the line [x, y].
+     * @param  float[]  $lineEnd  The end of the line [x, y].
      * @return float The perpendicular distance.
      */
     private static function perpendicularDistance(array $point, array $lineStart, array $lineEnd): float

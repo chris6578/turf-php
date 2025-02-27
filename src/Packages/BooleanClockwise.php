@@ -10,6 +10,10 @@ use InvalidArgumentException;
 
 class BooleanClockwise
 {
+    /**
+     * @param LineString|Polygon|mixed[] $geometry
+     * @return bool
+     */
     public function __invoke(LineString|Polygon|array $geometry): bool
     {
         // Extract coordinates from the input

@@ -69,6 +69,17 @@ class Kinks
         return new FeatureCollection($features);
     }
 
+    /**
+     * @param float|int $x1
+     * @param float|int $y1
+     * @param float|int $x2
+     * @param float|int $y2
+     * @param float|int $x3
+     * @param float|int $y3
+     * @param float|int $x4
+     * @param float|int $y4
+     * @return float[]|int[]|null
+     */
     private static function lineIntersects($x1, $y1, $x2, $y2, $x3, $y3, $x4, $y4): ?array
     {
         $denominator = ($y4 - $y3) * ($x2 - $x1) - ($x4 - $x3) * ($y2 - $y1);

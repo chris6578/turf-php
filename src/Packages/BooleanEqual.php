@@ -21,9 +21,9 @@ class BooleanEqual
     /**
      * Rounds coordinates to the specified precision.
      *
-     * @param  array  $coords  Coordinates to round.
+     * @param  mixed[]  $coords  Coordinates to round.
      * @param  int  $precision  Decimal precision.
-     * @return array Rounded coordinates.
+     * @return mixed[] Rounded coordinates.
      */
     private static function roundCoordinates(array $coords, int $precision): array
     {
