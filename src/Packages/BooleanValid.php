@@ -92,11 +92,19 @@ class BooleanValid
         return true;
     }
 
+    /**
+     * @param mixed[] $ring
+     * @return bool
+     */
     private static function checkRingsClose(array $ring): bool
     {
         return $ring[0] === end($ring);
     }
 
+    /**
+     * @param mixed[] $ring
+     * @return bool
+     */
     private static function hasSelfIntersections(array $ring): bool
     {
         for ($i = 0; $i < count($ring) - 1; $i++) {
@@ -112,6 +120,11 @@ class BooleanValid
         return false;
     }
 
+    /**
+     * @param mixed[] $poly1
+     * @param mixed[] $poly2
+     * @return bool
+     */
     private static function polygonsIntersect(array $poly1, array $poly2): bool
     {
         foreach ($poly1 as $point) {
@@ -122,6 +135,12 @@ class BooleanValid
         return false;
     }
 
+    /**
+     * @param mixed[] $polygon
+     * @param mixed[] $polygons
+     * @param int $index
+     * @return bool
+     */
     private static function checkPolygonAgainstOthers(array $polygon, array $polygons, int $index): bool
     {
         foreach (array_slice($polygons, $index + 1) as $otherPolygon) {

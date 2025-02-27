@@ -273,10 +273,10 @@ class Helpers
     /**
      * Determines whether two line segments intersect.
      *
-     * @param array $p1 Start point of first segment [x, y].
-     * @param array $p2 End point of first segment [x, y].
-     * @param array $p3 Start point of second segment [x, y].
-     * @param array $p4 End point of second segment [x, y].
+     * @param float[] $p1 Start point of first segment [x, y].
+     * @param float[] $p2 End point of first segment [x, y].
+     * @param float[] $p3 Start point of second segment [x, y].
+     * @param float[] $p4 End point of second segment [x, y].
      * @return bool True if segments intersect, false otherwise.
      */
     public static function doSegmentsIntersect(array $p1, array $p2, array $p3, array $p4): bool

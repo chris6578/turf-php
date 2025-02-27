@@ -40,6 +40,13 @@ class BooleanIntersect
         return false;
     }
 
+    /**
+     * @param float[] $p1
+     * @param float[] $p2
+     * @param float[] $p3
+     * @param float[] $p4
+     * @return bool
+     */
     private function doEdgesIntersect(array $p1, array $p2, array $p3, array $p4): bool
     {
         $o1 = $this->orientation($p1, $p2, $p3);
@@ -54,6 +61,12 @@ class BooleanIntersect
         return false;
     }
 
+    /**
+     * @param float[] $p
+     * @param float[] $q
+     * @param float[] $r
+     * @return int
+     */
     private function orientation(array $p, array $q, array $r): int
     {
         $val = ($q[1] - $p[1]) * ($r[0] - $q[0]) - ($q[0] - $p[0]) * ($r[1] - $q[1]);

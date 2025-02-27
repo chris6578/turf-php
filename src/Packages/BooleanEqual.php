@@ -23,9 +23,9 @@ class BooleanEqual
      *
      * @param  mixed[]  $coords  Coordinates to round.
      * @param  int  $precision  Decimal precision.
-     * @return mixed[] Rounded coordinates.
+     * @return mixed Rounded coordinates.
      */
-    private static function roundCoordinates($coords, int $precision)
+    private static function roundCoordinates($coords, int $precision): mixed
     {
         if (is_array($coords)) {
             return array_map(static function ($coord) use ($precision) {
