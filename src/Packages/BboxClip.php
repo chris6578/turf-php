@@ -13,9 +13,7 @@ use InvalidArgumentException;
 class BboxClip
 {
     /**
-     * @param GeoJson $feature
-     * @param float[] $bbox
-     * @return Feature
+     * @param  float[]  $bbox
      */
     public function __invoke(
         GeoJson $feature,
@@ -67,7 +65,7 @@ class BboxClip
             $p1 = $line[$i];
             $p2 = $line[$i + 1];
             $clippedSegment = self::cohenSutherlandClip($p1, $p2, $bbox);
-            if (!empty($clippedSegment)) {
+            if (! empty($clippedSegment)) {
                 if (empty($clipped)) {
                     $clipped = $clippedSegment;
                 } else {
@@ -106,6 +104,7 @@ class BboxClip
                 $clippedRings[] = array_reverse($clipped);
             }
         }
+
         return $clippedRings;
     }
 
@@ -213,7 +212,7 @@ class BboxClip
                 $insideCurr = self::inside($currPoint, $edgeName, $bbox);
 
                 if ($insideCurr) {
-                    if (!$insidePrev) {
+                    if (! $insidePrev) {
                         // Segment enters the clipping area; add intersection
                         $intersection = self::computeIntersection($prevPoint, $currPoint, $edgeName, $bbox);
                         if ($intersection && (empty($newPolygon) || $newPolygon[count($newPolygon) - 1] !== $intersection)) {
@@ -283,30 +282,51 @@ class BboxClip
 
         switch ($edgeName) {
             case 'left':
-                if ($dx == 0) return null;
+                if ($dx == 0) {
+                    return null;
+                }
                 $t = ($minX - $s[0]) / $dx;
-                if ($t < 0 || $t > 1) return null;
+                if ($t < 0 || $t > 1) {
+                    return null;
+                }
                 $y = $s[1] + $t * $dy;
+
                 return [$minX, $y];
             case 'right':
-                if ($dx == 0) return null;
+                if ($dx == 0) {
+                    return null;
+                }
                 $t = ($maxX - $s[0]) / $dx;
-                if ($t < 0 || $t > 1) return null;
+                if ($t < 0 || $t > 1) {
+                    return null;
+                }
                 $y = $s[1] + $t * $dy;
+
                 return [$maxX, $y];
             case 'bottom':
-                if ($dy == 0) return null;
+                if ($dy == 0) {
+                    return null;
+                }
                 $t = ($minY - $s[1]) / $dy;
-                if ($t < 0 || $t > 1) return null;
+                if ($t < 0 || $t > 1) {
+                    return null;
+                }
                 $x = $s[0] + $t * $dx;
+
                 return [$x, $minY];
             case 'top':
-                if ($dy == 0) return null;
+                if ($dy == 0) {
+                    return null;
+                }
                 $t = ($maxY - $s[1]) / $dy;
-                if ($t < 0 || $t > 1) return null;
+                if ($t < 0 || $t > 1) {
+                    return null;
+                }
                 $x = $s[0] + $t * $dx;
+
                 return [$x, $maxY];
         }
+
         return null;
     }
 }

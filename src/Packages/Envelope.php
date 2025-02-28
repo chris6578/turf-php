@@ -10,8 +10,7 @@ class Envelope
 {
     public function __invoke(
         GeoJson $geoJson,
-    ): Feature
-    {
+    ): Feature {
         return Turf::bboxPolygon(Turf::bbox($geoJson));
     }
 }

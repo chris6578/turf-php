@@ -5,7 +5,6 @@ namespace Turf\Tests;
 use GeoJson\Feature\Feature;
 use GeoJson\Feature\FeatureCollection;
 use GeoJson\GeoJson;
-use GeoJson\Geometry\MultiPolygon;
 use GeoJson\Geometry\Polygon;
 use PHPUnit\Framework\TestCase;
 use Turf\Turf;
@@ -14,11 +13,11 @@ class DifferenceTest extends TestCase
 {
     public function test_simple_difference()
     {
-        $geo1 = new Polygon([[[128, -26],[141, -26],[141, -21],[128, -21],[128, -26]]]);
-        $geo2 = new Polygon([[[126, -28], [140, -28], [140, -20],[126, -20],[126, -28]]]);
+        $geo1 = new Polygon([[[128, -26], [141, -26], [141, -21], [128, -21], [128, -26]]]);
+        $geo2 = new Polygon([[[126, -28], [140, -28], [140, -20], [126, -20], [126, -28]]]);
 
         $expected = new Feature(
-            new Polygon([[[140,-26],[140,-21],[141,-21],[141,-26],[140,-26]]]),
+            new Polygon([[[140, -26], [140, -21], [141, -21], [141, -26], [140, -26]]]),
             []
         );
 
@@ -37,5 +36,4 @@ class DifferenceTest extends TestCase
         $this->assertEquals($expected, $difference);
         $this->assertInstanceOf(Feature::class, $difference);
     }
-
 }

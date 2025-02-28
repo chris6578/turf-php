@@ -16,7 +16,7 @@ class EnvelopeTest extends TestCase
         $featureCollection = new FeatureCollection([
             new Feature(new Point([-75.343, 39.984])),
             new Feature(new Point([-75.833, 39.284])),
-            new Feature(new Point([-75.534, 39.123]))
+            new Feature(new Point([-75.534, 39.123])),
         ]);
 
         $expected = GeoJson::jsonUnserialize(json_decode('{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-75.833,39.123],[-75.343,39.123],[-75.343,39.984],[-75.833,39.984],[-75.833,39.123]]]},"properties":{}}'));

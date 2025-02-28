@@ -13,13 +13,8 @@ use Turf\Enums\Unit;
 class RectangleGrid
 {
     /**
-     * @param float[] $bbox
-     * @param float $cellWidth
-     * @param float $cellHeight
-     * @param string|Unit $units
-     * @param Feature|FeatureCollection|Polygon|MultiPolygon|null $mask
-     * @param mixed[] $properties
-     * @return FeatureCollection
+     * @param  float[]  $bbox
+     * @param  mixed[]  $properties
      */
     public function __invoke(
         array $bbox,
@@ -72,10 +67,7 @@ class RectangleGrid
     }
 
     /**
-     * @param float[] $bbox
-     * @param float $cellWidth
-     * @param float $cellHeight
-     * @param string|Unit $units
+     * @param  float[]  $bbox
      * @return mixed[]
      */
     private static function calculateGridCellSizes(

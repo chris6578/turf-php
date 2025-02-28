@@ -62,7 +62,6 @@ class BooleanDisjoint
     }
 
     /**
-     * @param Polygon $polygon
      * @return mixed[]
      */
     private function getEdges(Polygon $polygon): array
@@ -72,15 +71,15 @@ class BooleanDisjoint
         for ($i = 0; $i < count($coords) - 1; $i++) {
             $edges[] = [$coords[$i], $coords[$i + 1]];
         }
+
         return $edges;
     }
 
     /**
-     * @param float[] $p1
-     * @param float[] $p2
-     * @param float[] $p3
-     * @param float[] $p4
-     * @return bool
+     * @param  float[]  $p1
+     * @param  float[]  $p2
+     * @param  float[]  $p3
+     * @param  float[]  $p4
      */
     private function doEdgesIntersect(array $p1, array $p2, array $p3, array $p4): bool
     {
@@ -97,15 +96,17 @@ class BooleanDisjoint
     }
 
     /**
-     * @param float[] $p
-     * @param float[] $q
-     * @param float[] $r
-     * @return int
+     * @param  float[]  $p
+     * @param  float[]  $q
+     * @param  float[]  $r
      */
     private function orientation(array $p, array $q, array $r): int
     {
         $val = ($q[1] - $p[1]) * ($r[0] - $q[0]) - ($q[0] - $p[0]) * ($r[1] - $q[1]);
-        if (abs($val) < 1e-10) return 0;
+        if (abs($val) < 1e-10) {
+            return 0;
+        }
+
         return ($val > 0) ? 1 : 2;
     }
 }

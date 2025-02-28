@@ -12,12 +12,8 @@ use Turf\Enums\Unit;
 class Circle
 {
     /**
-     * @param float[]|Point $center
-     * @param float $radius
-     * @param int $steps
-     * @param string|Unit $units
-     * @param mixed[] $properties
-     * @return Feature
+     * @param  float[]|Point  $center
+     * @param  mixed[]  $properties
      */
     public function __invoke(
         array|Point $center,

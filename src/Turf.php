@@ -61,12 +61,9 @@ class Turf
     }
 
     /**
-     * @param mixed $startPoint
-     * @param mixed $midPoint
-     * @param mixed $endPoint
-     * @param bool $explementary
-     * @param bool $mercator
-     * @return float
+     * @param  mixed  $startPoint
+     * @param  mixed  $midPoint
+     * @param  mixed  $endPoint
      */
     public static function angle(
         $startPoint,
@@ -88,8 +85,7 @@ class Turf
 
     /**
      * Calculate the bounding box (BBox) of a given GeoJSON object.
-     * @param GeoJson $geoJSON
-     * @param bool|null $recompute
+     *
      * @return float[]
      */
     public static function bbox(GeoJson $geoJSON, ?bool $recompute = false): array
@@ -100,9 +96,7 @@ class Turf
     /**
      * Clips a GeoJSON Feature to a given bounding box.
      *
-     * @param GeoJson $geoJSON
-     * @param float[] $bbox
-     * @return Feature
+     * @param  float[]  $bbox
      */
     public static function bboxClip(GeoJson $geoJSON, array $bbox): Feature
     {
@@ -111,10 +105,9 @@ class Turf
 
     /**
      * Generates a Polygon feature from a bbox.
-     * @param float[] $bbox
-     * @param float[] $properties
-     * @param $id
-     * @return Feature
+     *
+     * @param  float[]  $bbox
+     * @param  float[]  $properties
      */
     public static function bboxPolygon(array $bbox, array $properties = [], mixed $id = null): Feature
     {
@@ -123,10 +116,9 @@ class Turf
 
     /**
      * Calculates the geographic bearing between two points.
-     * @param float[] $start
-     * @param float[] $end
-     * @param bool $final
-     * @return float
+     *
+     * @param  float[]  $start
+     * @param  float[]  $end
      */
     public static function bearing(array $start, array $end, bool $final = false): float
     {
@@ -135,8 +127,8 @@ class Turf
 
     /**
      * Determines if a ring (LineString or Polygon) is clockwise.
-     * @param LineString|Polygon|mixed[] $geometry
-     * @return bool
+     *
+     * @param  LineString|Polygon|mixed[]  $geometry
      */
     public static function booleanClockwise(LineString|Polygon|array $geometry): bool
     {
@@ -223,12 +215,9 @@ class Turf
 
     /**
      * Generate a circular polygon around the specified center point.
-     * @param float[]|Point $center
-     * @param float $radius
-     * @param int $steps
-     * @param string|Unit $units
-     * @param mixed[] $properties
-     * @return GeoJson
+     *
+     * @param  float[]|Point  $center
+     * @param  mixed[]  $properties
      */
     public static function circle(
         array|Point $center,
@@ -254,11 +243,7 @@ class Turf
      *  given a distance in degrees, radians, miles, or kilometers;
      *  and bearing in degrees.
      *
-     * @param float[]|Point $origin
-     * @param float $distance
-     * @param float $bearing
-     * @param string|Unit $units
-     * @return Point
+     * @param  float[]|Point  $origin
      */
     public static function destination(
         array|Point $origin,
@@ -271,10 +256,8 @@ class Turf
 
     /**
      * Finds the difference between multiple geometries by clipping the subsequent polygons from the first.
-     * @param Feature|FeatureCollection|Polygon|MultiPolygon $geo1
-     * @param Feature|FeatureCollection|Polygon|MultiPolygon $geo2
-     * @param mixed[] $properties
-     * @return Feature
+     *
+     * @param  mixed[]  $properties
      */
     public static function difference(
         Feature|FeatureCollection|Polygon|MultiPolygon $geo1,
@@ -285,10 +268,8 @@ class Turf
     }
 
     /**
-     * @param float[]|Point $from
-     * @param float[]|Point $to
-     * @param string|Unit $units
-     * @return float
+     * @param  float[]|Point  $from
+     * @param  float[]|Point  $to
      */
     public static function distance(
         array|Point $from,
@@ -300,8 +281,6 @@ class Turf
 
     /**
      * Takes any number of features and returns a Polygon feature encompassing all vertices.
-     * @param GeoJson $geoJSON
-     * @return Feature
      */
     public static function envelope(
         GeoJson $geoJSON,
@@ -343,13 +322,8 @@ class Turf
     }
 
     /**
-     * @param float[] $bbox
-     * @param float $cellWidth
-     * @param float $cellHeight
-     * @param string|Unit $units
-     * @param Feature|FeatureCollection|Polygon|MultiPolygon|null $mask
-     * @param mixed[] $properties
-     * @return FeatureCollection
+     * @param  float[]  $bbox
+     * @param  mixed[]  $properties
      */
     public static function rectangleGrid(
         array $bbox,
@@ -363,12 +337,8 @@ class Turf
     }
 
     /**
-     * @param float[] $bbox
-     * @param float $cellSize
-     * @param string|Unit $units
-     * @param Feature|FeatureCollection|Polygon|MultiPolygon|null $mask
-     * @param mixed[] $properties
-     * @return FeatureCollection
+     * @param  float[]  $bbox
+     * @param  mixed[]  $properties
      */
     public static function squareGrid(
         array $bbox,
@@ -384,10 +354,8 @@ class Turf
      * Takes input Feature, FeatureCollection, Polygon, or MultiPolygon inputs and returns
      * a feature with one combined polygon. If the input polygons are not contiguous,
      * it returns a MultiPolygon feature.
-     * @param Feature|FeatureCollection|Polygon|MultiPolygon $geo1
-     * @param Feature|FeatureCollection|Polygon|MultiPolygon $geo2
-     * @param mixed[] $properties
-     * @return Feature
+     *
+     * @param  mixed[]  $properties
      */
     public static function union(
         Feature|FeatureCollection|Polygon|MultiPolygon $geo1,

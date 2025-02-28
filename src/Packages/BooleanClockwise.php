@@ -11,8 +11,7 @@ use InvalidArgumentException;
 class BooleanClockwise
 {
     /**
-     * @param LineString|Polygon|mixed[] $geometry
-     * @return bool
+     * @param  LineString|Polygon|mixed[]  $geometry
      */
     public function __invoke(LineString|Polygon|array $geometry): bool
     {

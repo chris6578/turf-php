@@ -13,18 +13,15 @@ use Polyclip\Clipper;
 class Union
 {
     /**
-     * @param Feature|FeatureCollection|Polygon|MultiPolygon $geometry1
-     * @param Feature|FeatureCollection|Polygon|MultiPolygon $geometry2
-     * @param mixed[] $properties
-     * @return Feature
+     * @param  mixed[]  $properties
      */
     public function __invoke(
         Feature|FeatureCollection|Polygon|MultiPolygon $geometry1,
         Feature|FeatureCollection|Polygon|MultiPolygon $geometry2,
         array $properties = [],
-    ): Feature
-    {
+    ): Feature {
         $union = Clipper::union($geometry1, $geometry2);
+
         return new Feature($union->getGeometry(), $properties);
     }
 }

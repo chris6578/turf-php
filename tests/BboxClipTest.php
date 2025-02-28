@@ -27,7 +27,7 @@ class BboxClipTest extends TestCase
         $bbox = [0, 0, 1, 1];
         $clipped = Turf::bboxClip($polygon, $bbox);
         $coords = $clipped->getGeometry()->getCoordinates()[0];
-        $this->assertEquals([[0,1],[1,1],[1,0],[0,0],[0,1]], $coords, 'Polygon should be clipped to bbox');
+        $this->assertEquals([[0, 1], [1, 1], [1, 0], [0, 0], [0, 1]], $coords, 'Polygon should be clipped to bbox');
     }
 
     public function test_clip_feature(): void

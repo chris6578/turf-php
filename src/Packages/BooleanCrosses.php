@@ -58,6 +58,7 @@ class BooleanCrosses
                 $foundExtPoint = true;
             }
         }
+
         return $foundIntPoint && $foundExtPoint;
     }
 
@@ -72,6 +73,7 @@ class BooleanCrosses
                 $foundExtPoint = true;
             }
         }
+
         return $foundIntPoint && $foundExtPoint;
     }
 
@@ -79,16 +81,15 @@ class BooleanCrosses
     {
         $intersections = $this->findIntersections($line1, $line2);
         foreach ($intersections as $intersection) {
-            if (!$this->isEndpoint($intersection, $line1) && !$this->isEndpoint($intersection, $line2)) {
+            if (! $this->isEndpoint($intersection, $line1) && ! $this->isEndpoint($intersection, $line2)) {
                 return true;
             }
         }
+
         return false;
     }
 
     /**
-     * @param LineString $line1
-     * @param LineString $line2
      * @return mixed[]
      */
     private function findIntersections(LineString $line1, LineString $line2): array
@@ -107,14 +108,15 @@ class BooleanCrosses
                 }
             }
         }
+
         return $intersections;
     }
 
     /**
-     * @param float[] $p1
-     * @param float[] $p2
-     * @param float[] $p3
-     * @param float[] $p4
+     * @param  float[]  $p1
+     * @param  float[]  $p2
+     * @param  float[]  $p3
+     * @param  float[]  $p4
      * @return float[]|null
      */
     private function lineSegmentIntersection(array $p1, array $p2, array $p3, array $p4): ?array
@@ -133,17 +135,17 @@ class BooleanCrosses
                 $p1[1] + $ua * ($p2[1] - $p1[1]),
             ];
         }
+
         return null;
     }
 
     /**
-     * @param float[] $point
-     * @param LineString $line
-     * @return bool
+     * @param  float[]  $point
      */
     private function isEndpoint(array $point, LineString $line): bool
     {
         $coords = $line->getCoordinates();
+
         return $point == $coords[0] || $point == end($coords);
     }
 
@@ -153,10 +155,11 @@ class BooleanCrosses
         if ($this->doLineStringsCross($line, $boundary)) {
             $startPoint = new Point($line->getCoordinates()[0]);
             $endPoint = new Point($line->getCoordinates()[count($line->getCoordinates()) - 1]);
-            if (!Turf::booleanPointInPolygon($startPoint, $polygon) || !Turf::booleanPointInPolygon($endPoint, $polygon)) {
+            if (! Turf::booleanPointInPolygon($startPoint, $polygon) || ! Turf::booleanPointInPolygon($endPoint, $polygon)) {
                 return true;
             }
         }
+
         return false;
     }
 }

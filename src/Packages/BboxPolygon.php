@@ -9,10 +9,9 @@ use InvalidArgumentException;
 class BboxPolygon
 {
     /**
-     * @param mixed[] $bbox
-     * @param mixed[] $properties
-     * @param mixed $id
-     * @return Feature
+     * @param  mixed[]  $bbox
+     * @param  mixed[]  $properties
+     * @param  mixed  $id
      */
     public function __invoke(
         array $bbox, array $properties = [], $id = null

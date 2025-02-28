@@ -47,7 +47,7 @@ class BooleanValid
                     break;
                 }
             }
-            if (!$hasDistinct) {
+            if (! $hasDistinct) {
                 return false; // All points are identical
             }
         }
@@ -56,6 +56,7 @@ class BooleanValid
                 return false;
             }
         }
+
         return true;
     }
 
@@ -63,13 +64,14 @@ class BooleanValid
     {
         $rings = $polygon->getCoordinates();
         foreach ($rings as $i => $ring) {
-            if (count($ring) < 4 || !self::checkRingsClose($ring) || self::hasSelfIntersections($ring)) {
+            if (count($ring) < 4 || ! self::checkRingsClose($ring) || self::hasSelfIntersections($ring)) {
                 return false;
             }
             if ($i > 0 && self::polygonsIntersect($rings[0], $ring)) {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -78,23 +80,23 @@ class BooleanValid
         $polygons = $multiPolygon->getCoordinates();
         foreach ($polygons as $i => $polygon) {
             foreach ($polygon as $j => $ring) {
-                if (count($ring) < 4 || !self::checkRingsClose($ring) || self::hasSelfIntersections($ring)) {
+                if (count($ring) < 4 || ! self::checkRingsClose($ring) || self::hasSelfIntersections($ring)) {
                     return false;
                 }
                 if ($j > 0 && self::polygonsIntersect($polygon[0], $ring)) {
                     return false;
                 }
-                if ($j === 0 && !self::checkPolygonAgainstOthers($polygon, $polygons, $i)) {
+                if ($j === 0 && ! self::checkPolygonAgainstOthers($polygon, $polygons, $i)) {
                     return false;
                 }
             }
         }
+
         return true;
     }
 
     /**
-     * @param mixed[] $ring
-     * @return bool
+     * @param  mixed[]  $ring
      */
     private static function checkRingsClose(array $ring): bool
     {
@@ -102,8 +104,7 @@ class BooleanValid
     }
 
     /**
-     * @param mixed[] $ring
-     * @return bool
+     * @param  mixed[]  $ring
      */
     private static function hasSelfIntersections(array $ring): bool
     {
@@ -117,13 +118,13 @@ class BooleanValid
                 }
             }
         }
+
         return false;
     }
 
     /**
-     * @param mixed[] $poly1
-     * @param mixed[] $poly2
-     * @return bool
+     * @param  mixed[]  $poly1
+     * @param  mixed[]  $poly2
      */
     private static function polygonsIntersect(array $poly1, array $poly2): bool
     {
@@ -132,14 +133,13 @@ class BooleanValid
                 return true;
             }
         }
+
         return false;
     }
 
     /**
-     * @param mixed[] $polygon
-     * @param mixed[] $polygons
-     * @param int $index
-     * @return bool
+     * @param  mixed[]  $polygon
+     * @param  mixed[]  $polygons
      */
     private static function checkPolygonAgainstOthers(array $polygon, array $polygons, int $index): bool
     {
@@ -148,6 +148,7 @@ class BooleanValid
                 return false;
             }
         }
+
         return true;
     }
 }

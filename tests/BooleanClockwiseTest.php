@@ -33,7 +33,7 @@ class BooleanClockwiseTest extends TestCase
         $this->assertTrue(Turf::booleanClockwise($polygon), 'Clockwise polygon should return true');
     }
 
-    public function testBooleanClockwiseWithArray(): void
+    public function test_boolean_clockwise_with_array(): void
     {
         $clockwiseRing = [[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]];
         $counterClockwiseRing = [[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]];
@@ -48,7 +48,7 @@ class BooleanClockwiseTest extends TestCase
         );
     }
 
-    public function testBooleanClockwiseWithPolygon(): void
+    public function test_boolean_clockwise_with_polygon(): void
     {
         $polygon = new Polygon([[[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]]);
         $this->assertTrue(
@@ -57,7 +57,7 @@ class BooleanClockwiseTest extends TestCase
         );
     }
 
-    public function testBooleanClockwiseInvalidInput(): void
+    public function test_boolean_clockwise_invalid_input(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $invalidRing = [[0, 0]]; // Too few points

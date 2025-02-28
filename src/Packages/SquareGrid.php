@@ -14,12 +14,8 @@ use Turf\Turf;
 class SquareGrid
 {
     /**
-     * @param float[] $bbox
-     * @param float $cellSize
-     * @param string|Unit $units
-     * @param Feature|FeatureCollection|Polygon|MultiPolygon|null $mask
-     * @param mixed[] $properties
-     * @return FeatureCollection
+     * @param  float[]  $bbox
+     * @param  mixed[]  $properties
      */
     public function __invoke(
         array $bbox,

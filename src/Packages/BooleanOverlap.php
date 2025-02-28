@@ -27,7 +27,6 @@ class BooleanOverlap
             return self::doMultiPointsOverlap($geometry1, $geometry2);
         }
 
-
         if (get_class($geometry1) == Polygon::class && get_class($geometry2) == Polygon::class) {
             return self::doPolygonsOverlap($geometry1, $geometry2);
         }

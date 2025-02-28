@@ -2,7 +2,6 @@
 
 namespace Turf\Tests;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Turf\Enums\Unit;
 

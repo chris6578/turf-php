@@ -142,12 +142,11 @@ class Helpers
     }
 
     /**
-     * @param float[] $start
-     * @param float[] $end
-     * @param float[] $point
-     * @param float|null $epsilon
-     * @param bool|null $ignoreEndVertices
-     * @return bool
+     * @param  float[]  $start
+     * @param  float[]  $end
+     * @param  float[]  $point
+     * @param  float|null  $epsilon
+     * @param  bool|null  $ignoreEndVertices
      */
     public static function isPointOnLineSegment(array $start, array $end, array $point, $epsilon = 1e-10, $ignoreEndVertices = false): bool
     {
@@ -183,9 +182,8 @@ class Helpers
     }
 
     /**
-     * @param float[] $pair1
-     * @param float[] $pair2
-     * @return bool
+     * @param  float[]  $pair1
+     * @param  float[]  $pair2
      */
     public static function compareCoords(array $pair1, array $pair2): bool
     {
@@ -193,8 +191,7 @@ class Helpers
     }
 
     /**
-     * @param Feature[] $gridFeatures
-     * @param Feature|FeatureCollection|Polygon|MultiPolygon $mask
+     * @param  Feature[]  $gridFeatures
      * @return mixed[]
      */
     public static function filterGridByMask(
@@ -226,9 +223,7 @@ class Helpers
     }
 
     /**
-     * @param mixed[] $points
-     * @param Polygon|MultiPolygon|Geometry|null $polygon
-     * @return bool
+     * @param  mixed[]  $points
      */
     private static function anyPointInPolygon(array $points, Polygon|MultiPolygon|Geometry|null $polygon): bool
     {
@@ -242,10 +237,8 @@ class Helpers
     }
 
     /**
-     * @param float[] $point1
-     * @param float[] $point2
-     * @param Unit $units
-     * @return float
+     * @param  float[]  $point1
+     * @param  float[]  $point2
      */
     public static function haversineDistance(
         array $point1,
@@ -273,17 +266,20 @@ class Helpers
     /**
      * Determines whether two line segments intersect.
      *
-     * @param float[] $p1 Start point of first segment [x, y].
-     * @param float[] $p2 End point of first segment [x, y].
-     * @param float[] $p3 Start point of second segment [x, y].
-     * @param float[] $p4 End point of second segment [x, y].
+     * @param  float[]  $p1  Start point of first segment [x, y].
+     * @param  float[]  $p2  End point of first segment [x, y].
+     * @param  float[]  $p3  Start point of second segment [x, y].
+     * @param  float[]  $p4  End point of second segment [x, y].
      * @return bool True if segments intersect, false otherwise.
      */
     public static function doSegmentsIntersect(array $p1, array $p2, array $p3, array $p4): bool
     {
         $orientation = function ($p, $q, $r) {
             $val = ($q[1] - $p[1]) * ($r[0] - $q[0]) - ($q[0] - $p[0]) * ($r[1] - $q[1]);
-            if (abs($val) < 1e-10) return 0; // Collinear
+            if (abs($val) < 1e-10) {
+                return 0;
+            } // Collinear
+
             return ($val > 0) ? 1 : 2; // Clockwise or counterclockwise
         };
 
@@ -292,6 +288,6 @@ class Helpers
         $o3 = $orientation($p3, $p4, $p1);
         $o4 = $orientation($p3, $p4, $p2);
 
-        return ($o1 !== $o2 && $o3 !== $o4); // General case: segments cross
+        return $o1 !== $o2 && $o3 !== $o4; // General case: segments cross
     }
 }

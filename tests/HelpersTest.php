@@ -4,14 +4,11 @@ namespace Turf\Tests;
 
 use GeoJson\Feature\Feature;
 use GeoJson\Feature\FeatureCollection;
-use GeoJson\Geometry\MultiPolygon;
-use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Turf\Enums\Unit;
 use Turf\Packages\Helpers;
-use Turf\Turf;
 
 class HelpersTest extends TestCase
 {

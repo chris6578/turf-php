@@ -55,8 +55,7 @@ class Rewind
     }
 
     /**
-     * @param mixed[] $coords
-     * @param bool $reverse
+     * @param  mixed[]  $coords
      * @return mixed[]
      */
     private static function rewindLineString(array $coords, bool $reverse): array
@@ -69,8 +68,7 @@ class Rewind
     }
 
     /**
-     * @param mixed[] $coords
-     * @param bool $reverse
+     * @param  mixed[]  $coords
      * @return mixed[]
      */
     private static function rewindPolygon(array $coords, bool $reverse): array
@@ -91,8 +89,7 @@ class Rewind
     }
 
     /**
-     * @param mixed[] $ring
-     * @return bool
+     * @param  mixed[]  $ring
      */
     private static function isClockwise(array $ring): bool
     {

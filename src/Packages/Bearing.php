@@ -5,10 +5,8 @@ namespace Turf\Packages;
 class Bearing
 {
     /**
-     * @param float[] $start
-     * @param float[] $end
-     * @param bool $final
-     * @return float
+     * @param  float[]  $start
+     * @param  float[]  $end
      */
     public function __invoke(array $start, array $end, bool $final = false): float
     {

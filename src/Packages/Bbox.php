@@ -16,8 +16,6 @@ use GeoJson\Geometry\Polygon;
 class Bbox
 {
     /**
-     * @param GeoJson $geojson
-     * @param bool $recompute
      * @return mixed[]
      */
     public function __invoke(
