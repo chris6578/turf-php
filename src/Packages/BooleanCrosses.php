@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace willvincent\Turf\Packages;
+namespace Turf\Packages;
 
 use GeoJson\Geometry\Geometry;
 use GeoJson\Geometry\LineString;
@@ -10,7 +10,7 @@ use GeoJson\Geometry\MultiPoint;
 use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 use InvalidArgumentException;
-use willvincent\Turf\Turf;
+use Turf\Turf;
 
 class BooleanCrosses
 {

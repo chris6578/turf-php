@@ -1,11 +1,11 @@
 <?php
 
-namespace willvincent\Turf\Tests;
+namespace Turf\Tests;
 
 use GeoJson\Geometry\Point;
 use PHPUnit\Framework\TestCase;
-use willvincent\Turf\Enums\Unit;
-use willvincent\Turf\Turf;
+use Turf\Enums\Unit;
+use Turf\Turf;
 
 class DistanceTest extends TestCase
 {

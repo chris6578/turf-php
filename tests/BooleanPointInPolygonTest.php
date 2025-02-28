@@ -1,12 +1,12 @@
 <?php
 
-namespace willvincent\Turf\Tests;
+namespace Turf\Tests;
 
 use GeoJson\Geometry\MultiPolygon;
 use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 use PHPUnit\Framework\TestCase;
-use willvincent\Turf\Turf;
+use Turf\Turf;
 
 class BooleanPointInPolygonTest extends TestCase
 {

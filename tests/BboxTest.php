@@ -1,6 +1,6 @@
 <?php
 
-namespace willvincent\Turf\Tests;
+namespace Turf\Tests;
 
 use GeoJson\Feature\Feature;
 use GeoJson\GeoJson;
@@ -8,7 +8,7 @@ use GeoJson\Geometry\LineString;
 use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 use PHPUnit\Framework\TestCase;
-use willvincent\Turf\Turf;
+use Turf\Turf;
 
 class BboxTest extends TestCase
 {

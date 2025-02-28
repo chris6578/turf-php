@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace willvincent\Turf\Packages;
+namespace Turf\Packages;
 
 use GeoJson\Feature\Feature;
 use GeoJson\Feature\FeatureCollection;
 use GeoJson\Geometry\MultiPolygon;
 use GeoJson\Geometry\Polygon;
-use willvincent\Turf\Enums\Unit;
+use Turf\Enums\Unit;
 
 class RectangleGrid
 {

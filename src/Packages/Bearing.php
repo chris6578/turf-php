@@ -1,6 +1,6 @@
 <?php
 
-namespace willvincent\Turf\Packages;
+namespace Turf\Packages;
 
 class Bearing
 {

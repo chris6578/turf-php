@@ -1,6 +1,6 @@
 <?php
 
-namespace willvincent\Turf\Enums;
+namespace Turf\Enums;
 
 enum Unit: string
 {

@@ -43,7 +43,7 @@ in your PHP application.
 
 ```php
 use GeoJson\GeoJson;
-use willvincent\Turf\Turf;
+use Turf\Turf;
 
 $featureCollection = GeoJson::jsonUnserialize(json_decode('
     {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"name":"LAX"},
@@ -74,7 +74,7 @@ $square_miles = Turf::area($featureCollection, 'miles');
 ```php
 use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
-use willvincent\Turf\Turf;
+use Turf\Turf;
 
 $point = new Point([-77, 44]);
 $polygon = new Polygon([
@@ -90,7 +90,7 @@ echo Turf::booleanPointInPolygon($point, $polygon) ? 'true' : 'false'; // Output
 use GeoJson\Feature\Feature;
 use GeoJson\Feature\FeatureCollection;
 use GeoJson\Geometry\Polygon;
-use willvincent\Turf\Turf;
+use Turf\Turf;
 
 $polygon1 = new Polygon([
   [

@@ -1,10 +1,10 @@
 <?php
 
-namespace willvincent\Turf\Tests;
+namespace Turf\Tests;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use willvincent\Turf\Enums\Unit;
+use Turf\Enums\Unit;
 
 class EnumsTest extends TestCase
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace willvincent\Turf\Tests;
+namespace Turf\Tests;
 
 use PHPUnit\Framework\TestCase;
-use willvincent\Turf\Enums\Unit;
-use willvincent\Turf\Turf;
+use Turf\Enums\Unit;
+use Turf\Turf;
 
 class SquareGridTest extends TestCase
 {

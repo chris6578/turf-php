@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace willvincent\Turf\Packages;
+namespace Turf\Packages;
 
 use GeoJson\Geometry\LineString;
 

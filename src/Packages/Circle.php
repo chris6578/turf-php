@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace willvincent\Turf\Packages;
+namespace Turf\Packages;
 
 use GeoJson\Feature\Feature;
 use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
-use willvincent\Turf\Enums\Unit;
+use Turf\Enums\Unit;
 
 class Circle
 {

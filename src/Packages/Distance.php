@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace willvincent\Turf\Packages;
+namespace Turf\Packages;
 
 use GeoJson\Geometry\Geometry;
 use GeoJson\Geometry\Point;
-use willvincent\Turf\Enums\Unit;
+use Turf\Enums\Unit;
 
 class Distance
 {

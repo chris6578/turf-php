@@ -1,10 +1,10 @@
 <?php
 
-namespace willvincent\Turf\Tests;
+namespace Turf\Tests;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use willvincent\Turf\Turf;
+use Turf\Turf;
 
 class AngleTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace willvincent\Turf;
+namespace Turf;
 
 use GeoJson\Feature\Feature;
 use GeoJson\Feature\FeatureCollection;
@@ -14,38 +14,39 @@ use GeoJson\Geometry\MultiLineString;
 use GeoJson\Geometry\MultiPolygon;
 use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
-use willvincent\Turf\Enums\Unit;
-use willvincent\Turf\Packages\Along;
-use willvincent\Turf\Packages\Angle;
-use willvincent\Turf\Packages\Area;
-use willvincent\Turf\Packages\Bbox;
-use willvincent\Turf\Packages\BboxClip;
-use willvincent\Turf\Packages\BboxPolygon;
-use willvincent\Turf\Packages\Bearing;
-use willvincent\Turf\Packages\BooleanClockwise;
-use willvincent\Turf\Packages\BooleanConcave;
-use willvincent\Turf\Packages\BooleanContains;
-use willvincent\Turf\Packages\BooleanCrosses;
-use willvincent\Turf\Packages\BooleanDisjoint;
-use willvincent\Turf\Packages\BooleanEqual;
-use willvincent\Turf\Packages\BooleanIntersect;
-use willvincent\Turf\Packages\BooleanOverlap;
-use willvincent\Turf\Packages\BooleanParallel;
-use willvincent\Turf\Packages\BooleanPointInPolygon;
-use willvincent\Turf\Packages\BooleanPointOnLine;
-use willvincent\Turf\Packages\BooleanTouches;
-use willvincent\Turf\Packages\BooleanValid;
-use willvincent\Turf\Packages\BooleanWithin;
-use willvincent\Turf\Packages\Circle;
-use willvincent\Turf\Packages\Destination;
-use willvincent\Turf\Packages\Distance;
-use willvincent\Turf\Packages\Kinks;
-use willvincent\Turf\Packages\RectangleGrid;
-use willvincent\Turf\Packages\Rewind;
-use willvincent\Turf\Packages\Simplify;
-use willvincent\Turf\Packages\SquareGrid;
-use willvincent\Turf\Packages\TurfClone;
-use willvincent\Turf\Packages\UnkinkPolygon;
+use Turf\Enums\Unit;
+use Turf\Packages\Along;
+use Turf\Packages\Angle;
+use Turf\Packages\Area;
+use Turf\Packages\Bbox;
+use Turf\Packages\BboxClip;
+use Turf\Packages\BboxPolygon;
+use Turf\Packages\Bearing;
+use Turf\Packages\BooleanClockwise;
+use Turf\Packages\BooleanConcave;
+use Turf\Packages\BooleanContains;
+use Turf\Packages\BooleanCrosses;
+use Turf\Packages\BooleanDisjoint;
+use Turf\Packages\BooleanEqual;
+use Turf\Packages\BooleanIntersect;
+use Turf\Packages\BooleanOverlap;
+use Turf\Packages\BooleanParallel;
+use Turf\Packages\BooleanPointInPolygon;
+use Turf\Packages\BooleanPointOnLine;
+use Turf\Packages\BooleanTouches;
+use Turf\Packages\BooleanValid;
+use Turf\Packages\BooleanWithin;
+use Turf\Packages\Circle;
+use Turf\Packages\Destination;
+use Turf\Packages\Distance;
+use Turf\Packages\Kinks;
+use Turf\Packages\RectangleGrid;
+use Turf\Packages\Rewind;
+use Turf\Packages\Simplify;
+use Turf\Packages\SquareGrid;
+use Turf\Packages\TurfClone;
+use Turf\Packages\Union;
+use Turf\Packages\UnkinkPolygon;
 
 class Turf
 {
@@ -349,6 +350,23 @@ class Turf
         array $properties = []
     ): FeatureCollection {
         return (new SquareGrid)($bbox, $cellSize, $units, $mask, $properties);
+    }
+
+    /**
+     * Takes input Feature, FeatureCollection, Polygon, or MultiPolygon inputs and returns
+     * a feature with one combined polygon. If the input polygons are not contiguous,
+     * it returns a MultiPolygon feature.
+     * @param Feature|FeatureCollection|Polygon|MultiPolygon $geo1
+     * @param Feature|FeatureCollection|Polygon|MultiPolygon $geo2
+     * @param mixed[] $properties
+     * @return Feature
+     */
+    public static function union(
+        Feature|FeatureCollection|Polygon|MultiPolygon $geo1,
+        Feature|FeatureCollection|Polygon|MultiPolygon $geo2,
+        array $properties = [],
+    ): Feature {
+        return (new Union)($geo1, $geo2, $properties);
     }
 
     /** Takes a kinked polygon and returns a feature collection of polygons that have no kinks. */

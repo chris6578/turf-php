@@ -4,12 +4,13 @@
     "type": "library",
     "require": {
         "jmikola/geojson": "^1.0",
-        "php": ">=8.2"
+        "php": ">=8.2",
+        "willvincent/polyclip": "^1.2"
     },
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "willvincent\\Turf\\": "src/"
+            "Turf\\": "src/"
         }
     },
     "authors": [

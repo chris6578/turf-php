@@ -1,14 +1,14 @@
 <?php
 
-namespace willvincent\Turf\Tests;
+namespace Turf\Tests;
 
 use GeoJson\Feature\Feature;
 use GeoJson\Geometry\LineString;
 use GeoJson\Geometry\Point;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use willvincent\Turf\Enums\Unit;
-use willvincent\Turf\Turf;
+use Turf\Enums\Unit;
+use Turf\Turf;
 
 class AlongTest extends TestCase
 {

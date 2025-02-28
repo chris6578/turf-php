@@ -1,11 +1,11 @@
 <?php
 
-namespace willvincent\Turf\Tests;
+namespace Turf\Tests;
 
 use GeoJson\Feature\Feature;
 use GeoJson\Geometry\Polygon;
 use PHPUnit\Framework\TestCase;
-use willvincent\Turf\Turf;
+use Turf\Turf;
 
 class AreaTest extends TestCase
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace willvincent\Turf\Packages;
+namespace Turf\Packages;
 
 use GeoJson\Feature\Feature;
 use GeoJson\GeoJson;
 use GeoJson\Geometry\LineString;
 use GeoJson\Geometry\Point;
 use InvalidArgumentException;
-use willvincent\Turf\Enums\Unit;
+use Turf\Enums\Unit;
 
 class Along
 {
