@@ -140,10 +140,14 @@ The following generative and manipulation functions are currently implemented:
 - ✅ `bboxPolygon` - Takes a bbox and returns an equivalent polygon.
 - ✅ `circle` - Calculates a circle of a given radius around a center point
 - ✅ `destination` - Calculate the location of a destination point from an origin point
+- ✅ `difference` - Finds the difference between multiple polygons by clipping the subsequent
+      polygons from the first
+- ✅ `envelope` - Creates a rectangle polygon feature around all vertices of input geometries
 - ✅ `rectangleGrip` - Generates a rectangle grid within a bounding box
 - ✅ `rewind` - Rewinds geometry to adhere to geojson spec
 - ✅ `squareGrid` - Generates a square gris within a bounding box
 - ✅ `kinks` - Finds all self-intersecting points
+- ✅ `union` - Merge intersecting polygons into one contiguous polygon
 - ✅ `unkink` - Breaks self-intersecting polygons into separate polygons at the intersection points
 
 The following boolean operations are currently implemented:

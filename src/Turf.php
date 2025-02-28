@@ -38,7 +38,9 @@ use Turf\Packages\BooleanValid;
 use Turf\Packages\BooleanWithin;
 use Turf\Packages\Circle;
 use Turf\Packages\Destination;
+use Turf\Packages\Difference;
 use Turf\Packages\Distance;
+use Turf\Packages\Envelope;
 use Turf\Packages\Kinks;
 use Turf\Packages\RectangleGrid;
 use Turf\Packages\Rewind;
@@ -268,6 +270,21 @@ class Turf
     }
 
     /**
+     * Finds the difference between multiple geometries by clipping the subsequent polygons from the first.
+     * @param Feature|FeatureCollection|Polygon|MultiPolygon $geo1
+     * @param Feature|FeatureCollection|Polygon|MultiPolygon $geo2
+     * @param mixed[] $properties
+     * @return Feature
+     */
+    public static function difference(
+        Feature|FeatureCollection|Polygon|MultiPolygon $geo1,
+        Feature|FeatureCollection|Polygon|MultiPolygon $geo2,
+        array $properties = [],
+    ): Feature {
+        return (new Difference)($geo1, $geo2, $properties);
+    }
+
+    /**
      * @param float[]|Point $from
      * @param float[]|Point $to
      * @param string|Unit $units
@@ -279,6 +296,17 @@ class Turf
         string|Unit $units = Unit::KILOMETERS,
     ): float {
         return (new Distance)($from, $to, $units);
+    }
+
+    /**
+     * Takes any number of features and returns a Polygon feature encompassing all vertices.
+     * @param GeoJson $geoJSON
+     * @return Feature
+     */
+    public static function envelope(
+        GeoJson $geoJSON,
+    ): Feature {
+        return (new Envelope)($geoJSON);
     }
 
     /**
