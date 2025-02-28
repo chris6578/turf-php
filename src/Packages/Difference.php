@@ -12,6 +12,12 @@ use Polyclip\Clipper;
 
 class Difference
 {
+    /**
+     * @param Feature|FeatureCollection|Polygon|MultiPolygon $geometry1
+     * @param Feature|FeatureCollection|Polygon|MultiPolygon $geometry2
+     * @param mixed[] $properties
+     * @return Feature
+     */
     public function __invoke(
         Feature|FeatureCollection|Polygon|MultiPolygon $geometry1,
         Feature|FeatureCollection|Polygon|MultiPolygon $geometry2,
