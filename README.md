@@ -143,7 +143,7 @@ The following generative and manipulation functions are currently implemented:
 - ✅ `difference` - Finds the difference between multiple polygons by clipping the subsequent
       polygons from the first
 - ✅ `envelope` - Creates a rectangle polygon feature around all vertices of input geometries
-- ✅ `rectangleGrip` - Generates a rectangle grid within a bounding box
+- ✅ `rectangleGrid` - Generates a rectangle grid within a bounding box
 - ✅ `rewind` - Rewinds geometry to adhere to geojson spec
 - ✅ `squareGrid` - Generates a square gris within a bounding box
 - ✅ `kinks` - Finds all self-intersecting points
