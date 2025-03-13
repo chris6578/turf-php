@@ -22,17 +22,11 @@ correctly, please consider opening a pull request!
 
 ## 📦 Installation
 
-For the moment, you have to install from this repo. It will be published and accessible via composer in the near future.
+Install Turf-PHP using **Composer**:
 
-[//]: # ()
-[//]: # (Install Turf-PHP using **Composer**:)
-
-[//]: # ()
-[//]: # (```sh)
-
-[//]: # (composer require willvincent/turf-php)
-
-[//]: # (```)
+```sh
+composer require willvincent/turf-php
+```
 
 ## 🛠 Usage
 
