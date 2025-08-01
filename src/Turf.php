@@ -42,6 +42,7 @@ use Turf\Packages\Difference;
 use Turf\Packages\Distance;
 use Turf\Packages\Envelope;
 use Turf\Packages\Kinks;
+use Turf\Packages\Cookie;
 use Turf\Packages\RectangleGrid;
 use Turf\Packages\Rewind;
 use Turf\Packages\Simplify;
@@ -298,6 +299,20 @@ class Turf
         GeoJson $geoJSON
     ): FeatureCollection {
         return (new Kinks)($geoJSON);
+    }
+
+    /**
+     * Clips input geometries using a cookie cutter polygon or multipolygon, returning only the intersecting parts.
+     * Works like a cookie cutter, removing any geometry outside the cutter's outer rings or inside holes.
+     * 
+     * @param bool $containedOnly If true, only returns features that are fully contained within the cutter
+     */
+    public static function cookie(
+        Feature|FeatureCollection|Polygon|MultiPolygon $source,
+        Polygon|MultiPolygon $cutter,
+        bool $containedOnly = false
+    ): FeatureCollection {
+        return (new Cookie)($source, $cutter, $containedOnly);
     }
 
     /**

@@ -133,6 +133,7 @@ The following generative and manipulation functions are currently implemented:
 - ✅ `bboxClip` - Clips a feature to the bbox
 - ✅ `bboxPolygon` - Takes a bbox and returns an equivalent polygon.
 - ✅ `circle` - Calculates a circle of a given radius around a center point
+- ✅ `cookie` - Cuts a Feature/FeatureCollection of Polygons or Multipolygons by another like a cookie cutter
 - ✅ `destination` - Calculate the location of a destination point from an origin point
 - ✅ `difference` - Finds the difference between multiple polygons by clipping the subsequent
       polygons from the first
