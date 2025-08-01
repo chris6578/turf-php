@@ -6,7 +6,11 @@ namespace Turf\Packages;
 
 use GeoJson\Feature\Feature;
 use GeoJson\Feature\FeatureCollection;
+use GeoJson\Geometry\GeometryCollection;
+use GeoJson\Geometry\LineString;
+use GeoJson\Geometry\MultiLineString;
 use GeoJson\Geometry\MultiPolygon;
+use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 use Polyclip\Clipper;
 use Turf\Turf;
@@ -120,27 +124,95 @@ class Cookie
 
         if ($cutter instanceof Feature) {
             $geometry = $cutter->getGeometry();
-            if ($geometry instanceof Polygon || $geometry instanceof MultiPolygon) {
-                return $geometry;
-            }
-            return null;
-        }
-
-        if ($cutter instanceof FeatureCollection) {
-            $features = $cutter->getFeatures();
-            if (empty($features)) {
+            $polygons = $this->extractPolygonsFromGeometry($geometry);
+            
+            if (empty($polygons)) {
                 return null;
             }
-
-            // Use the first feature's geometry as the cutter
-            $geometry = $features[0]->getGeometry();
-            if ($geometry instanceof Polygon || $geometry instanceof MultiPolygon) {
-                return $geometry;
+            
+            // If only one polygon, return as Polygon, otherwise as MultiPolygon
+            if (count($polygons) === 1) {
+                return new Polygon($polygons[0]);
             }
+            
+            return new MultiPolygon($polygons);
+        }
+
+        // Must be FeatureCollection at this point
+        $features = $cutter->getFeatures();
+        if (empty($features)) {
             return null;
         }
 
-        return null;
+        // Collect all valid geometries from the FeatureCollection
+        $polygons = [];
+        $skippedCount = 0;
+        
+        foreach ($features as $feature) {
+            $geometry = $feature->getGeometry();
+            $extracted = $this->extractPolygonsFromGeometry($geometry);
+            
+            if (!empty($extracted)) {
+                $polygons = array_merge($polygons, $extracted);
+            } else {
+                $skippedCount++;
+            }
+        }
+        
+        // Log a warning if we had to skip non-polygon geometries
+        if ($skippedCount > 0 && !empty($polygons)) {
+            // Note: In a real application, you might want to use proper logging
+            // For now, we silently continue as long as we have at least one valid polygon
+        }
+
+        if (empty($polygons)) {
+            return null;
+        }
+
+        // If only one polygon, return as Polygon, otherwise as MultiPolygon
+        if (count($polygons) === 1) {
+            return new Polygon($polygons[0]);
+        }
+
+        return new MultiPolygon($polygons);
+    }
+
+    /**
+     * Extract polygon coordinates from various geometry types
+     * 
+     * @param mixed $geometry The geometry to extract polygons from
+     * @return array<array<array<array<float>>>> Array of polygon coordinate arrays
+     */
+    private function extractPolygonsFromGeometry($geometry): array
+    {
+        if ($geometry === null) {
+            return [];
+        }
+
+        if ($geometry instanceof Polygon) {
+            return [$geometry->getCoordinates()];
+        }
+
+        if ($geometry instanceof MultiPolygon) {
+            return $geometry->getCoordinates();
+        }
+
+        if ($geometry instanceof GeometryCollection) {
+            $polygons = [];
+            foreach ($geometry->getGeometries() as $subGeometry) {
+                $extracted = $this->extractPolygonsFromGeometry($subGeometry);
+                $polygons = array_merge($polygons, $extracted);
+            }
+            return $polygons;
+        }
+
+        // For non-polygon geometries (Point, LineString, etc.), we could potentially:
+        // 1. Buffer them to create polygons (requires additional library)
+        // 2. Convert simple rectangles from LineStrings
+        // 3. Create bounding box polygons
+        // For now, we skip them gracefully but could extend this in the future
+        
+        return [];
     }
 
     /**

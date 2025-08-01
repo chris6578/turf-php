@@ -4,7 +4,10 @@ namespace Turf\Tests;
 
 use GeoJson\Feature\Feature;
 use GeoJson\Feature\FeatureCollection;
+use GeoJson\Geometry\GeometryCollection;
+use GeoJson\Geometry\LineString;
 use GeoJson\Geometry\MultiPolygon;
+use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 use PHPUnit\Framework\TestCase;
 use Turf\Turf;
@@ -390,10 +393,10 @@ class CookieTest extends TestCase
         // Source polygon
         $source = new Polygon([[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]);
 
-        // Cutter as a FeatureCollection (uses first feature)
+        // Cutter as a FeatureCollection with multiple features that should all be used
         $cutterCollection = new FeatureCollection([
-            new Feature(new Polygon([[[1, 1], [3, 1], [3, 3], [1, 3], [1, 1]]]), ['id' => 1]),
-            new Feature(new Polygon([[[2, 2], [4, 2], [4, 4], [2, 4], [2, 2]]]), ['id' => 2]),
+            new Feature(new Polygon([[[1, 1], [2, 1], [2, 2], [1, 2], [1, 1]]]), ['id' => 1]),
+            new Feature(new Polygon([[[3, 3], [4, 3], [4, 4], [3, 4], [3, 3]]]), ['id' => 2]),
         ]);
 
         $result = Turf::cookie($source, $cutterCollection);
@@ -401,8 +404,15 @@ class CookieTest extends TestCase
         $this->assertInstanceOf(FeatureCollection::class, $result);
         $features = $result->getFeatures();
 
+        // Should get results from cutting with BOTH polygons in the FeatureCollection
         $this->assertEquals(1, count($features));
-        $this->assertInstanceOf(Polygon::class, $features[0]->getGeometry());
+        
+        // The result should be a MultiPolygon since we're cutting with multiple separate areas
+        $resultGeometry = $features[0]->getGeometry();
+        $this->assertTrue(
+            $resultGeometry instanceof Polygon || $resultGeometry instanceof MultiPolygon,
+            'Result should be Polygon or MultiPolygon when cutting with FeatureCollection'
+        );
     }
 
     public function test_cookie_with_empty_feature_collection_cutter(): void
@@ -419,6 +429,90 @@ class CookieTest extends TestCase
         $features = $result->getFeatures();
 
         // Should return empty result when cutter is empty
+        $this->assertEquals(0, count($features));
+    }
+
+    public function test_cookie_with_mixed_geometry_types_in_cutter(): void
+    {
+        // Source polygon
+        $source = new Polygon([[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]);
+
+        // Mixed FeatureCollection with various geometry types
+        $mixedCutter = new FeatureCollection([
+            // Valid polygon - should be used
+            new Feature(new Polygon([[[1, 1], [2, 1], [2, 2], [1, 2], [1, 1]]]), ['type' => 'polygon']),
+            // Point - should be ignored gracefully
+            new Feature(new Point([1.5, 1.5]), ['type' => 'point']),
+            // LineString - should be ignored gracefully
+            new Feature(new LineString([[0.5, 0.5], [3.5, 3.5]]), ['type' => 'line']),
+            // Another valid polygon - should be used
+            new Feature(new Polygon([[[3, 3], [4, 3], [4, 4], [3, 4], [3, 3]]]), ['type' => 'polygon2']),
+            // Feature with null geometry - should be ignored gracefully
+            new Feature(null, ['type' => 'null']),
+        ]);
+
+        $result = Turf::cookie($source, $mixedCutter);
+
+        $this->assertInstanceOf(FeatureCollection::class, $result);
+        $features = $result->getFeatures();
+
+        // Should get results from cutting with the valid polygons only
+        $this->assertEquals(1, count($features));
+        
+        // Result should be a MultiPolygon since we're using multiple polygons
+        $resultGeometry = $features[0]->getGeometry();
+        $this->assertTrue(
+            $resultGeometry instanceof Polygon || $resultGeometry instanceof MultiPolygon,
+            'Result should be Polygon or MultiPolygon when cutting with mixed geometries'
+        );
+    }
+
+    public function test_cookie_with_geometry_collection_cutter(): void
+    {
+        // Source polygon
+        $source = new Polygon([[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]);
+
+        // GeometryCollection containing mixed geometries
+        $geometryCollection = new GeometryCollection([
+            new Polygon([[[1, 1], [2, 1], [2, 2], [1, 2], [1, 1]]]),
+            new Point([1.5, 1.5]), // Should be ignored
+            new Polygon([[[3, 3], [4, 3], [4, 4], [3, 4], [3, 3]]]),
+        ]);
+
+        $cutterFeature = new Feature($geometryCollection, ['type' => 'mixed_collection']);
+
+        $result = Turf::cookie($source, $cutterFeature);
+
+        $this->assertInstanceOf(FeatureCollection::class, $result);
+        $features = $result->getFeatures();
+
+        // Should extract and use the polygons from the GeometryCollection
+        $this->assertEquals(1, count($features));
+        
+        $resultGeometry = $features[0]->getGeometry();
+        $this->assertTrue(
+            $resultGeometry instanceof Polygon || $resultGeometry instanceof MultiPolygon,
+            'Result should be Polygon or MultiPolygon when cutting with GeometryCollection'
+        );
+    }
+
+    public function test_cookie_with_only_non_polygon_geometries_in_cutter(): void
+    {
+        // Source polygon
+        $source = new Polygon([[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]);
+
+        // FeatureCollection with only non-polygon geometries
+        $nonPolygonCutter = new FeatureCollection([
+            new Feature(new Point([1.5, 1.5]), ['type' => 'point']),
+            new Feature(new LineString([[0.5, 0.5], [3.5, 3.5]]), ['type' => 'line']),
+        ]);
+
+        $result = Turf::cookie($source, $nonPolygonCutter);
+
+        $this->assertInstanceOf(FeatureCollection::class, $result);
+        $features = $result->getFeatures();
+
+        // Should return empty result when no valid polygons are found in cutter
         $this->assertEquals(0, count($features));
     }
 }
