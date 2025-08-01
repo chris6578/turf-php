@@ -54,11 +54,18 @@ class Bbox
                 $minY = min($minY, $y);
                 $maxX = max($maxX, $x);
                 $maxY = max($maxY, $y);
+            } elseif ($geometry instanceof MultiPolygon) {
+                foreach ($geometry->getCoordinates() as $polygon) {
+                    foreach ($polygon as $ring) {
+                        foreach ($ring as $point) {
+                            $updateBBox(new Point($point));
+                        }
+                    }
+                }
             } elseif ($geometry instanceof MultiPoint ||
                 $geometry instanceof LineString ||
                 $geometry instanceof MultiLineString ||
-                $geometry instanceof Polygon ||
-                $geometry instanceof MultiPolygon) {
+                $geometry instanceof Polygon) {
                 foreach ($geometry->getCoordinates() as $coord) {
                     if (is_array($coord[0])) {
                         foreach ($coord as $point) {

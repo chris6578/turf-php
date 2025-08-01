@@ -5,6 +5,7 @@ namespace Turf\Tests;
 use GeoJson\Feature\Feature;
 use GeoJson\GeoJson;
 use GeoJson\Geometry\LineString;
+use GeoJson\Geometry\MultiPolygon;
 use GeoJson\Geometry\Point;
 use GeoJson\Geometry\Polygon;
 use PHPUnit\Framework\TestCase;
@@ -69,5 +70,36 @@ class BboxTest extends TestCase
         ]);
         $bbox = Turf::bbox($feature, true);
         $this->assertEquals([10, 20, 10, 20], $bbox, 'Should recompute BBox when recompute is true');
+    }
+
+    public function test_bbox_multipolygon(): void
+    {
+        $multiPolygon = new MultiPolygon([
+            [
+                [[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]],
+            ],
+            [
+                [[2, 2], [4, 2], [4, 4], [2, 4], [2, 2]],
+            ],
+        ]);
+
+        $bbox = Turf::bbox($multiPolygon);
+        $this->assertEquals([0, 0, 4, 4], $bbox, 'MultiPolygon BBox should encompass all polygons');
+    }
+
+    public function test_bbox_multipolygon_with_holes(): void
+    {
+        $multiPolygon = new MultiPolygon([
+            [
+                [[0, 0], [3, 0], [3, 3], [0, 3], [0, 0]],
+                [[1, 1], [2, 1], [2, 2], [1, 2], [1, 1]],
+            ],
+            [
+                [[5, 5], [7, 5], [7, 7], [5, 7], [5, 5]],
+            ],
+        ]);
+
+        $bbox = Turf::bbox($multiPolygon);
+        $this->assertEquals([0, 0, 7, 7], $bbox, 'MultiPolygon BBox with holes should encompass all rings');
     }
 }
