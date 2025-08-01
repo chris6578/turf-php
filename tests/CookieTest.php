@@ -186,7 +186,7 @@ class CookieTest extends TestCase
 
     public function test_cookie_complex_jagged_shape(): void
     {
-        // Create a fine grid  
+        // Create a fine grid
         $gridFeatures = [];
         for ($x = 0; $x < 20; $x++) {
             for ($y = 0; $y < 20; $y++) {
@@ -194,10 +194,10 @@ class CookieTest extends TestCase
                 $y1 = $y * 0.5;
                 $x2 = $x1 + 0.5;
                 $y2 = $y1 + 0.5;
-                
+
                 $gridFeatures[] = new Feature(
                     new Polygon([
-                        [[$x1, $y1], [$x2, $y1], [$x2, $y2], [$x1, $y2], [$x1, $y1]]
+                        [[$x1, $y1], [$x2, $y1], [$x2, $y2], [$x1, $y2], [$x1, $y1]],
                     ]),
                     ['x' => $x, 'y' => $y]
                 );
@@ -210,7 +210,7 @@ class CookieTest extends TestCase
         $centerX = 5;
         $centerY = 5;
         $radius = 3;
-        
+
         // Create a zigzag star with many sharp points
         for ($i = 0; $i < 32; $i++) {
             $angle = ($i / 32) * 2 * M_PI;
@@ -222,7 +222,7 @@ class CookieTest extends TestCase
         }
         // Close the ring
         $cutterCoords[] = $cutterCoords[0];
-        
+
         $cutter = new Polygon([$cutterCoords]);
 
         $result = Turf::cookie($grid, $cutter);
@@ -246,12 +246,12 @@ class CookieTest extends TestCase
         // Verify we have a mix of fully contained and partially clipped features
         $totalVertices = 0;
         $originalSquareCount = 0;
-        
+
         foreach ($features as $feature) {
             $coords = $feature->getGeometry()->getCoordinates();
             $ringVertices = count($coords[0]) - 1; // Exclude closing vertex
             $totalVertices += $ringVertices;
-            
+
             // Original square grid cells have 4 vertices
             if ($ringVertices === 4) {
                 $originalSquareCount++;
@@ -260,10 +260,10 @@ class CookieTest extends TestCase
 
         // Verify we have a good mix of contained and partially intersected features
         $this->assertGreaterThan(5, $originalSquareCount, 'Should have some fully contained squares (optimization working)');
-        
+
         // Should have processed a reasonable portion of the grid
         $this->assertGreaterThan(50, count($features), 'Should process a reasonable number of grid cells');
-        
+
         // Verify all features are valid polygon types
         foreach ($features as $feature) {
             $geometry = $feature->getGeometry();
@@ -272,8 +272,8 @@ class CookieTest extends TestCase
                 'All features should be Polygon or MultiPolygon'
             );
         }
-        
-        echo "\nComplex jagged test: Total features=" . count($features) . ", Fully contained squares=$originalSquareCount\n";
+
+        echo "\nComplex jagged test: Total features=".count($features).", Fully contained squares=$originalSquareCount\n";
     }
 
     public function test_cookie_contained_only_mode(): void
@@ -292,23 +292,23 @@ class CookieTest extends TestCase
 
         // Test normal mode (should include contained + partial)
         $normalResult = Turf::cookie($source, $cutter, false);
-        $normalIds = array_map(fn($f) => $f->getProperties()['id'], $normalResult->getFeatures());
+        $normalIds = array_map(fn ($f) => $f->getProperties()['id'], $normalResult->getFeatures());
         sort($normalIds);
-        
+
         // Test contained-only mode (should include only contained)
         $containedResult = Turf::cookie($source, $cutter, true);
-        $containedIds = array_map(fn($f) => $f->getProperties()['id'], $containedResult->getFeatures());
-        
+        $containedIds = array_map(fn ($f) => $f->getProperties()['id'], $containedResult->getFeatures());
+
         // Normal mode should have both contained and partial
         $this->assertContains('contained', $normalIds);
         $this->assertContains('partial', $normalIds);
         $this->assertNotContains('none', $normalIds);
-        
+
         // Contained-only mode should have only contained
         $this->assertContains('contained', $containedIds);
         $this->assertNotContains('partial', $containedIds);
         $this->assertNotContains('none', $containedIds);
-        
+
         $this->assertEquals(2, count($normalResult->getFeatures()), 'Normal mode should have 2 features');
         $this->assertEquals(1, count($containedResult->getFeatures()), 'Contained-only mode should have 1 feature');
     }
@@ -323,10 +323,10 @@ class CookieTest extends TestCase
                 $y1 = $y * 1.0;
                 $x2 = $x1 + 1.0;
                 $y2 = $y1 + 1.0;
-                
+
                 $gridFeatures[] = new Feature(
                     new Polygon([
-                        [[$x1, $y1], [$x2, $y1], [$x2, $y2], [$x1, $y2], [$x1, $y1]]
+                        [[$x1, $y1], [$x2, $y1], [$x2, $y2], [$x1, $y2], [$x1, $y1]],
                     ]),
                     ['x' => $x, 'y' => $y]
                 );
@@ -336,7 +336,7 @@ class CookieTest extends TestCase
 
         // Diamond shape that will create many partial intersections
         $cutter = new Polygon([
-            [[3, 1], [5, 3], [3, 5], [1, 3], [3, 1]]
+            [[3, 1], [5, 3], [3, 5], [1, 3], [3, 1]],
         ]);
 
         $result = Turf::cookie($grid, $cutter);
@@ -345,11 +345,11 @@ class CookieTest extends TestCase
         // Count vertex types
         $squareCount = 0;
         $complexCount = 0;
-        
+
         foreach ($features as $feature) {
             $coords = $feature->getGeometry()->getCoordinates();
             $vertices = count($coords[0]) - 1;
-            
+
             if ($vertices === 4) {
                 $squareCount++;
             } else {
@@ -361,7 +361,7 @@ class CookieTest extends TestCase
         $this->assertGreaterThan(0, $squareCount, 'Should have some fully contained squares');
         $this->assertGreaterThan(0, $complexCount, 'Should have some partially intersected polygons');
         $this->assertGreaterThan(5, count($features), 'Should have a reasonable number of intersections');
-        
-        echo "\nPartial intersection test: Total=" . count($features) . ", Squares=$squareCount, Complex=$complexCount\n";
+
+        echo "\nPartial intersection test: Total=".count($features).", Squares=$squareCount, Complex=$complexCount\n";
     }
 }
