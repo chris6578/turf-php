@@ -15,11 +15,17 @@ class Cookie
 {
     public function __invoke(
         Feature|FeatureCollection|Polygon|MultiPolygon $source,
-        Polygon|MultiPolygon $cutter,
+        Feature|FeatureCollection|Polygon|MultiPolygon $cutter,
         bool $containedOnly = false
     ): FeatureCollection {
+        // Extract geometry from cutter if it's a Feature or FeatureCollection
+        $cutterGeometry = $this->extractCutterGeometry($cutter);
+        if ($cutterGeometry === null) {
+            return new FeatureCollection([]);
+        }
+
         // Pre-compute cutter bounding box for spatial filtering
-        $cutterBbox = Turf::bbox($cutter);
+        $cutterBbox = Turf::bbox($cutterGeometry);
 
         // Collect all features to process
         $sourceFeatures = [];
@@ -50,7 +56,7 @@ class Cookie
             }
 
             // Check if feature is fully contained within cutter
-            $isFullyContained = $this->isFullyContained($featureBbox, $cutterBbox, $geometry, $cutter);
+            $isFullyContained = $this->isFullyContained($featureBbox, $cutterBbox, $geometry, $cutterGeometry);
 
             if ($containedOnly) {
                 // Only include fully contained features
@@ -81,7 +87,7 @@ class Cookie
             }
 
             // Compute intersection for partially intersecting features
-            $intersection = Clipper::intersection($geometry, $cutter);
+            $intersection = Clipper::intersection($geometry, $cutterGeometry);
             $intersectionGeometry = $intersection->getGeometry();
             if ($intersectionGeometry === null) {
                 continue;
@@ -101,6 +107,40 @@ class Cookie
         }
 
         return new FeatureCollection($clippedFeatures);
+    }
+
+    /**
+     * Extract geometry from cutter input
+     */
+    private function extractCutterGeometry(Feature|FeatureCollection|Polygon|MultiPolygon $cutter): Polygon|MultiPolygon|null
+    {
+        if ($cutter instanceof Polygon || $cutter instanceof MultiPolygon) {
+            return $cutter;
+        }
+
+        if ($cutter instanceof Feature) {
+            $geometry = $cutter->getGeometry();
+            if ($geometry instanceof Polygon || $geometry instanceof MultiPolygon) {
+                return $geometry;
+            }
+            return null;
+        }
+
+        if ($cutter instanceof FeatureCollection) {
+            $features = $cutter->getFeatures();
+            if (empty($features)) {
+                return null;
+            }
+
+            // Use the first feature's geometry as the cutter
+            $geometry = $features[0]->getGeometry();
+            if ($geometry instanceof Polygon || $geometry instanceof MultiPolygon) {
+                return $geometry;
+            }
+            return null;
+        }
+
+        return null;
     }
 
     /**

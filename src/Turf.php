@@ -309,7 +309,7 @@ class Turf
      */
     public static function cookie(
         Feature|FeatureCollection|Polygon|MultiPolygon $source,
-        Polygon|MultiPolygon $cutter,
+        Feature|FeatureCollection|Polygon|MultiPolygon $cutter,
         bool $containedOnly = false
     ): FeatureCollection {
         return (new Cookie)($source, $cutter, $containedOnly);

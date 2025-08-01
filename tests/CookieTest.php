@@ -364,4 +364,61 @@ class CookieTest extends TestCase
 
         echo "\nPartial intersection test: Total=".count($features).", Squares=$squareCount, Complex=$complexCount\n";
     }
+
+    public function test_cookie_with_feature_cutter(): void
+    {
+        // Source polygon
+        $source = new Polygon([[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]);
+
+        // Cutter as a Feature with properties
+        $cutterFeature = new Feature(
+            new Polygon([[[1, 1], [3, 1], [3, 3], [1, 3], [1, 1]]]),
+            ['name' => 'cutter-polygon']
+        );
+
+        $result = Turf::cookie($source, $cutterFeature);
+
+        $this->assertInstanceOf(FeatureCollection::class, $result);
+        $features = $result->getFeatures();
+
+        $this->assertEquals(1, count($features));
+        $this->assertInstanceOf(Polygon::class, $features[0]->getGeometry());
+    }
+
+    public function test_cookie_with_feature_collection_cutter(): void
+    {
+        // Source polygon
+        $source = new Polygon([[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]);
+
+        // Cutter as a FeatureCollection (uses first feature)
+        $cutterCollection = new FeatureCollection([
+            new Feature(new Polygon([[[1, 1], [3, 1], [3, 3], [1, 3], [1, 1]]]), ['id' => 1]),
+            new Feature(new Polygon([[[2, 2], [4, 2], [4, 4], [2, 4], [2, 2]]]), ['id' => 2]),
+        ]);
+
+        $result = Turf::cookie($source, $cutterCollection);
+
+        $this->assertInstanceOf(FeatureCollection::class, $result);
+        $features = $result->getFeatures();
+
+        $this->assertEquals(1, count($features));
+        $this->assertInstanceOf(Polygon::class, $features[0]->getGeometry());
+    }
+
+    public function test_cookie_with_empty_feature_collection_cutter(): void
+    {
+        // Source polygon
+        $source = new Polygon([[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]);
+
+        // Empty FeatureCollection as cutter
+        $cutterCollection = new FeatureCollection([]);
+
+        $result = Turf::cookie($source, $cutterCollection);
+
+        $this->assertInstanceOf(FeatureCollection::class, $result);
+        $features = $result->getFeatures();
+
+        // Should return empty result when cutter is empty
+        $this->assertEquals(0, count($features));
+    }
 }
